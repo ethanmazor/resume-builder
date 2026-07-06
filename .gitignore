@@ -1,15 +1,15 @@
 # ── Personal data ────────────────────────────────────────────────────────────
-# This repo is public. The directories below hold private identity, work
-# history, project write-ups, generated resumes, and job descriptions.
-# None of their contents should ever be committed.
-profile/
-facts/
-context/
-jobs/
+# This repo is public. All personal content lives under data/. None of it
+# should ever be committed except structural placeholder files.
+data/profile/
+data/facts/
+data/context/
+data/jobs/
 # Subdirectory contents only — keep READMEs and .gitkeep placeholder files.
-resumes/*/
-inbox/*/
-projects/*/
+data/resumes/*/
+data/projects/*/
+# Machine-local config written by bootstrap; contains the source data-folder path.
+.sync-config.yaml
 
 # ── LaTeX / Tectonic build artifacts ─────────────────────────────────────────
 # (resume.pdf + resume.tex are committed intentionally; only ignore intermediates)

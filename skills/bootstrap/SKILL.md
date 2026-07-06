@@ -3,7 +3,7 @@ name: bootstrap
 description: >
   One-time ingestion of an external data folder into this repo's source of
   truth. Reads any folder the owner points to — structured or unstructured —
-  and populates profile/, facts/, context/, and projects/ from its contents.
+  and populates data/profile/, data/facts/, data/context/, and data/projects/ from its contents.
 triggers:
   - "bootstrap my source of truth"
   - "my data is at"
@@ -18,9 +18,9 @@ triggers:
 
 The owner has a folder somewhere on their machine containing their personal
 materials — an old resume, project notes, source code, research papers, or
-an already-structured `facts/` / `profile/` directory tree. This skill reads
+an already-structured `data/facts/` / `data/profile/` directory tree. This skill reads
 that folder end-to-end and writes the contents into this repo's
-`profile/profile.yaml`, `facts/*.yaml`, `context/*.md`, and `projects/`.
+`data/profile/profile.yaml`, `data/facts/*.yaml`, `data/context/*.md`, and `data/projects/`.
 
 Run this skill **once** on first setup, or when rebuilding from a new data
 source. For adding individual new projects after setup, use `ingest-inbox`.
@@ -32,8 +32,8 @@ source. For adding individual new projects after setup, use `ingest-inbox`.
 - **Ask before guessing.** If key identity information (name, email, education)
   is absent from the source files, ask the owner — do not invent it.
 - **Leave outputs uncommitted.** Do not `git commit` or `git push`.
-- **Do not overwrite if populated.** If `profile/profile.yaml` or any
-  `facts/*.yaml` already has content, warn the owner before overwriting and
+- **Do not overwrite if populated.** If `data/profile/profile.yaml` or any
+  `data/facts/*.yaml` already has content, warn the owner before overwriting and
   ask them to confirm.
 
 ---
@@ -52,8 +52,8 @@ directory. If not, stop and report the error.
 
 Check whether the source folder uses this repo's schema already:
 
-- **Structured source**: the folder contains any of `profile/profile.yaml`,
-  `facts/experience.yaml`, `facts/projects.yaml`, `facts/skills.yaml`.
+- **Structured source**: the folder contains any of `data/profile/profile.yaml`,
+  `data/facts/experience.yaml`, `data/facts/projects.yaml`, `data/facts/skills.yaml`.
 - **Unstructured source**: none of the above exist — it's a flat or ad-hoc
   collection of files.
 
@@ -86,11 +86,11 @@ If the source is **structured** (Step 1 detected schema files):
 1. Read each schema file from the source folder.
 2. Validate that it matches the expected schema (see schemas below).
 3. For files that are valid, copy them verbatim to the corresponding local path
-   (e.g., `source/profile/profile.yaml` → `profile/profile.yaml`).
+   (e.g., `source/profile/profile.yaml` → `data/profile/profile.yaml`).
 4. For files that have schema mismatches or missing required fields, note the
    gaps and continue — you will fill them in Step 6.
-5. Copy any `context/*.md` files to local `context/`.
-6. Copy any `projects/` subdirectories to local `projects/`.
+5. Copy any `data/context/*.md` files to local `data/context/`.
+6. Copy any `data/projects/` subdirectories to local `data/projects/`.
 7. Skip to Step 6.
 
 ---
@@ -105,36 +105,36 @@ top, contact info (email, phone, LinkedIn), work experience with dates, and
 an education section. Often has section headers like "Experience", "Education",
 "Projects", "Skills".
 
-- Use this as the primary source for `profile/`, `facts/experience.yaml`,
-  `facts/projects.yaml`, and `facts/skills.yaml`.
+- Use this as the primary source for `data/profile/`, `data/facts/experience.yaml`,
+  `data/facts/projects.yaml`, and `data/facts/skills.yaml`.
 
 ### B — Research paper
 **Signals:** Abstract, introduction/conclusion structure, bibliography,
 author affiliations, or academic venue (conference, journal, arXiv).
 
-- Destination: `projects/{slug}/papers/` where `{slug}` is inferred from
+- Destination: `data/projects/{slug}/papers/` where `{slug}` is inferred from
   the filename or paper title.
-- Also extract publication metadata for `facts/research.yaml` (if applicable).
+- Also extract publication metadata for `data/facts/research.yaml` (if applicable).
 
 ### C — Source code
 **Signals:** Source code extension (`.c`, `.cpp`, `.h`, `.py`, `.m`, `.v`,
 `.sv`, `.vhd`, `.s`, `.asm`) or build files (`Makefile`, `CMakeLists.txt`).
 
 - Group by the immediate parent folder name as the project slug.
-- Destination: `projects/{slug}/`.
+- Destination: `data/projects/{slug}/`.
 
 ### D — Project notes / write-up
 **Signals:** `.md`, `.txt`, or `.rst` with prose describing a project,
 internship, research role, or experience. Usually contains a title or
 heading indicating what it's about.
 
-- Destination: `context/{slug}.md` where `{slug}` is inferred from the
+- Destination: `data/context/{slug}.md` where `{slug}` is inferred from the
   filename or heading.
 
 ### E — Supporting resource
 Everything else: datasheets, images, datasets, configuration files.
 
-- Destination: `projects/{slug}/` under the nearest identifiable project
+- Destination: `data/projects/{slug}/` under the nearest identifiable project
   grouping (parent folder name or filename prefix).
 
 ---
@@ -145,34 +145,34 @@ Everything else: datasheets, images, datasets, configuration files.
 
 Parse the resume text to extract:
 
-**Identity** (for `profile/profile.yaml`):
+**Identity** (for `data/profile/profile.yaml`):
 - Full name
 - Email, phone
 - LinkedIn URL, portfolio URL, GitHub URL
 - Citizenship / work authorization (if mentioned)
 
-**Education** (for `profile/profile.yaml`):
+**Education** (for `data/profile/profile.yaml`):
 - Institution, degree, location, start/end dates, GPA (if present)
 
-**Work experience** (for `facts/experience.yaml`):
+**Work experience** (for `data/facts/experience.yaml`):
 - Company, title, location, start/end dates
 - Bullet points → canonical bullet inventory
 
-**Projects** (for `facts/projects.yaml`):
+**Projects** (for `data/facts/projects.yaml`):
 - Project name, tech stack, description bullets
 
-**Skills** (for `facts/skills.yaml`):
+**Skills** (for `data/facts/skills.yaml`):
 - Group by category if the resume groups them; otherwise leave flat
 
-**Research** (for `facts/research.yaml`, if present):
+**Research** (for `data/facts/research.yaml`, if present):
 - Institution, advisor, dates, publication titles
 
 ### 5b — From project notes (Category D)
 
-Each write-up becomes a `context/{slug}.md` file. Preserve the prose as-is;
+Each write-up becomes a `data/context/{slug}.md` file. Preserve the prose as-is;
 do not summarise or condense — richer context produces better resume bullets.
 
-If the write-up clearly corresponds to an existing `facts/` entry (same
+If the write-up clearly corresponds to an existing `data/facts/` entry (same
 employer or project name), note the connection in a YAML comment in that
 entry.
 
@@ -183,10 +183,10 @@ entry.
 Write the following files. Never truncate existing content; merge if a file
 already has data.
 
-### `profile/profile.yaml`
+### `data/profile/profile.yaml`
 
 ```yaml
-# profile/profile.yaml
+# data/profile/profile.yaml
 # Static identity. Used verbatim in every resume header + education section.
 # This is NEVER tailored to a job.
 
@@ -212,10 +212,10 @@ education:
     gpa: ""         # omit if not including
 ```
 
-### `facts/experience.yaml`
+### `data/facts/experience.yaml`
 
 ```yaml
-# facts/experience.yaml
+# data/facts/experience.yaml
 # All work experience: full-time, internship, and research roles.
 experiences:
   - id: ""                    # kebab-case stable identifier
@@ -231,10 +231,10 @@ experiences:
         skills: []
 ```
 
-### `facts/projects.yaml`
+### `data/facts/projects.yaml`
 
 ```yaml
-# facts/projects.yaml
+# data/facts/projects.yaml
 projects:
   - id: ""
     name: ""
@@ -247,10 +247,10 @@ projects:
         skills: []
 ```
 
-### `facts/skills.yaml`
+### `data/facts/skills.yaml`
 
 ```yaml
-# facts/skills.yaml
+# data/facts/skills.yaml
 skills:
   languages: []
   frameworks: []
@@ -258,10 +258,10 @@ skills:
   # add/rename groups to match the owner's background
 ```
 
-### `facts/research.yaml` (only if research content found)
+### `data/facts/research.yaml` (only if research content found)
 
 ```yaml
-# facts/research.yaml
+# data/facts/research.yaml
 research:
   - id: ""
     institution: ""
@@ -275,10 +275,10 @@ research:
     publications:
       - title: ""
         venue: ""
-        path: ""          # relative path inside projects/
+        path: ""          # relative path inside data/projects/
 ```
 
-### `context/{slug}.md`
+### `data/context/{slug}.md`
 
 Write each project/experience write-up as a standalone markdown file. Use the
 project or experience name as the slug (`kebab-case`).
@@ -288,8 +288,8 @@ project or experience name as the slug (`kebab-case`).
 ## Step 7 — Copy project files
 
 For each source code file (Category C) and resource file (Category E), copy
-to `projects/{slug}/` using the same relative path within the project grouping.
-For research papers (Category B), copy to `projects/{slug}/papers/`.
+to `data/projects/{slug}/` using the same relative path within the project grouping.
+For research papers (Category B), copy to `data/projects/{slug}/papers/`.
 
 Do not modify or summarise the files — copy verbatim.
 
@@ -298,30 +298,40 @@ Do not modify or summarise the files — copy verbatim.
 ## Step 8 — Identify gaps and ask clarifying questions
 
 After writing all outputs, review what could not be determined from the source
-files. Collect all gaps into a single `inbox/NEEDS_INFO.md` file and ask the
-owner to fill it in one pass:
+files. Ask the owner to fill in any gaps in a single message, listing each
+unknown field clearly:
 
-```markdown
-# NEEDS_INFO.md
-Please fill in the following and re-run bootstrap:
-
-## Identity
-- [ ] Full name: ___
-- [ ] Email: ___
-...
-
-## Experience: {company}
-- [ ] Exact start date: ___
-...
 ```
+Bootstrap found the following gaps — please provide these details:
 
-Show the owner a summary of what was successfully populated and what still
-needs answers. Do not re-run extraction — wait for the owner to update
-`NEEDS_INFO.md` and ask again.
+Identity:
+  - Full name: ___
+  - Email: ___
+  ...
+
+Experience: {company}
+  - Exact start date: ___
+  ...
+```
 
 ---
 
-## Step 9 — Report
+## Step 9 — Write .sync-config.yaml
+
+Write the following file to the repo root (it is gitignored — it stores only
+the local machine path and is never committed):
+
+```yaml
+# .sync-config.yaml — machine-local, gitignored
+# Written by bootstrap. Read by the sync skill to locate the source data folder.
+source_path: "/absolute/resolved/path/to/source-folder"
+```
+
+Replace the value with the absolute path resolved in Step 0.
+
+---
+
+## Step 10 — Report
 
 Write a brief summary to the terminal:
 
@@ -329,17 +339,19 @@ Write a brief summary to the terminal:
 Bootstrap complete.
 
 Populated:
-  profile/profile.yaml          ✓
-  facts/experience.yaml         ✓  (N entries)
-  facts/projects.yaml           ✓  (N entries)
-  facts/skills.yaml             ✓
-  context/                      ✓  (N files)
-  projects/                     ✓  (N directories)
+  data/profile/profile.yaml          ✓
+  data/facts/experience.yaml         ✓  (N entries)
+  data/facts/projects.yaml           ✓  (N entries)
+  data/facts/skills.yaml             ✓
+  data/context/                      ✓  (N files)
+  data/projects/                     ✓  (N directories)
 
-Gaps (see inbox/NEEDS_INFO.md):
+Gaps (see data/facts/ or data/context/ for TODOs):
   - Missing phone number
   - ...
 
-Next step: review the populated files, fill in inbox/NEEDS_INFO.md if needed,
-then drop a job description in jobs/ and ask: "Build resumes for any new jobs."
+Next steps:
+  1. Review the populated files and fill in any gaps.
+  2. Drop a job description in data/jobs/ and ask: "Build a resume for [role]."
+  3. When you add new material to your data folder, ask: "sync my data."
 ```
