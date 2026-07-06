@@ -1,0 +1,22 @@
+# LaTeX / Tectonic build artifacts (we keep resume.pdf + resume.tex intentionally,
+# so only ignore intermediate/log files).
+*.aux
+*.log
+*.out
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.toc
+*.bbl
+*.blg
+build/
+
+# Tectonic cache (if ever created locally)
+.tectonic/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.idea/
+.vscode/
