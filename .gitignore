@@ -1,5 +1,18 @@
-# LaTeX / Tectonic build artifacts (we keep resume.pdf + resume.tex intentionally,
-# so only ignore intermediate/log files).
+# ── Personal data ────────────────────────────────────────────────────────────
+# This repo is public. The directories below hold private identity, work
+# history, project write-ups, generated resumes, and job descriptions.
+# None of their contents should ever be committed.
+profile/
+facts/
+context/
+jobs/
+# Subdirectory contents only — keep READMEs and .gitkeep placeholder files.
+resumes/*/
+inbox/*/
+projects/*/
+
+# ── LaTeX / Tectonic build artifacts ─────────────────────────────────────────
+# (resume.pdf + resume.tex are committed intentionally; only ignore intermediates)
 *.aux
 *.log
 *.out
@@ -14,7 +27,7 @@ build/
 # Tectonic cache (if ever created locally)
 .tectonic/
 
-# OS / editor cruft
+# ── OS / editor cruft ────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 *.swp
