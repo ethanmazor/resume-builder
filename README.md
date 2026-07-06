@@ -1,95 +1,88 @@
-# Tailored Resume Automation
+# Resume Builder
 
-A repository that generates **one-page, ATS-friendly LaTeX resumes tailored to
-specific job descriptions** — from a single source of truth about your real
-experience. Generation is driven **locally by a coding agent** (Claude Code,
-GitHub Copilot CLI, Cursor, etc.); there is no CI, no API keys, and no cloud.
+Generate **one-page, ATS-friendly LaTeX resumes tailored to specific job descriptions** — from a single source of truth about your real experience. The agent does the work; you review the PDF.
+
+No CI, no API keys, no cloud. Runs entirely on your machine via a coding agent (Claude Code, GitHub Copilot, Cursor, etc.).
 
 ## How it works
 
+You keep a **data folder** — any directory with your materials: an old resume PDF, project notes, code, markdown write-ups, whatever you have. The agent reads it and builds the structured source of truth inside this repo. After that, drop a job description in `jobs/` and ask it to build.
+
 ```
- jobs/acme-swe.md            source of truth                 resumes/acme-swe/
- (raw job description)  ──▶   profile/ facts/ context/  ──▶   resume.pdf
-        │                          │                          resume.tex
-        │                          │                          tailoring-notes.md
-        └──────── coding agent (AGENTS.md + skills/build-resume/SKILL.md) ───────┘
+~/my-resume-data/        ← your folder: old resume, notes, project docs, code
+        |
+        v
+  resume-builder/        ← this repo (cloned once)
+    agent ingests  ──>  profile/  facts/  context/  projects/
+    agent builds   ──>  resumes/acme-swe/resume.pdf
 ```
 
-1. Drop a job description in `jobs/{company-role}.md` (raw text; optional hints).
-2. Spawn your coding agent in this repo. It auto-loads `AGENTS.md` and follows
-   `skills/build-resume/SKILL.md`.
-3. It auto-detects job descriptions with no matching resume, synthesizes tailored
-   one-page content grounded in your source of truth, compiles a PDF, and writes
-   the outputs to `resumes/{company-role}/`.
-4. **You review the PDF and commit.** The agent never commits.
+## Quickstart
+
+```bash
+brew install tectonic poppler   # LaTeX compiler + PDF tools (one-time)
+git clone https://github.com/ethanmazor/resume-builder
+cd resume-builder
+```
+
+Open the repo in your coding agent and say:
+
+> *"My data is at ~/my-resume-data — bootstrap my source of truth."*
+
+The agent scans your folder, extracts what it can from every readable file, populates `profile/profile.yaml`, `facts/`, and `context/`, then asks clarifying questions for anything it can't determine automatically. Once done:
+
+1. Drop a job description into `jobs/acme-swe.md` (paste raw JD; add an optional `## Hints` section to steer the agent)
+2. Ask: *"Build resumes for any new jobs."*
+
+The agent tailors content from your source of truth, compiles a PDF, and writes outputs to `resumes/acme-swe/`. **You review and commit. The agent never commits.**
+
+## What to say to your agent
+
+| Goal | Prompt |
+|------|--------|
+| First-time setup from a data folder | *"My data is at ~/my-data — bootstrap my source of truth."* |
+| Add new material after initial setup | *"Process `inbox/new-project/`."* |
+| Build all pending resumes | *"Build resumes for any new jobs."* |
+| Target one JD | *"Build the resume for `jobs/acme-swe.md`."* |
+| Refine an existing resume | *"For acme-swe, lead with the AWS project and cut coursework."* |
+| Check build toolchain | *"Verify my build toolchain is set up."* |
+
+## Your data folder
+
+The agent handles any structure — it doesn't need to match this repo's layout. Useful things to have in it:
+
+- An existing resume (`.pdf` or `.tex`)
+- Markdown or text notes about jobs, projects, or research
+- Source code for projects you want to reference
+- Research papers (`.pdf`) you authored or contributed to
+- A `profile.yaml` or `facts/*.yaml` if you already have them structured
+
+If your folder already uses this repo's `facts/` / `profile/` / `context/` schema, the agent copies it directly. If it's unstructured, the agent extracts what it can and asks about the rest.
 
 ## Repository layout
 
 | Path | Purpose |
 |------|---------|
 | `AGENTS.md` | Canonical agent instructions (auto-loaded by most agent CLIs). |
-| `CLAUDE.md` | Portability shim pointing to `AGENTS.md`. |
-| `skills/build-resume/SKILL.md` | The step-by-step generation procedure. |
-| `profile/profile.yaml` | Static identity: name, contact, links, education. |
-| `facts/` | Structured factual guardrail: experience, projects, skills, courses. |
-| `context/` | Free-form write-ups / brag docs for richer wording. |
-| `projects/` | Raw code, schematics, resources per project. Agent reads `context/` summaries, not these directly. |
+| `skills/bootstrap/SKILL.md` | One-time ingestion of an external data folder into this repo's source of truth. |
+| `skills/build-resume/SKILL.md` | Step-by-step resume generation procedure. |
+| `skills/ingest-inbox/SKILL.md` | Adds new material from `inbox/` to an already-populated source of truth. |
+| `profile/profile.yaml` | Your identity, contact info, and education. Never tailored. |
+| `facts/` | **Factual guardrail.** Experience, projects, skills, courses. The agent won't claim anything not here. |
+| `context/` | Free-form brag docs / write-ups. Richer material to draw wording from. |
+| `projects/` | Raw code, schematics, resources per project. |
+| `inbox/` | Drop zone for new material after initial bootstrap. |
+| `jobs/` | Input job descriptions, one file per role. |
+| `resumes/` | Output — one folder per job. |
 | `template/STYLE_GUIDE.md` | Jake's Resume LaTeX style guide the agent authors against. |
-| `jobs/` | Input job descriptions. |
-| `resumes/` | Output, one folder per job. |
 | `scripts/build.sh` | Compile with Tectonic + verify one page with `pdfinfo`. |
-
-## Setup
-
-Install the LaTeX toolchain (one time):
-
-```bash
-brew install tectonic poppler
-```
-
-- **Tectonic** compiles LaTeX to PDF (self-contained; fetches packages on demand).
-- **Poppler** provides `pdfinfo`, used to verify the resume is exactly one page.
-
-Then fill in your source of truth:
-
-1. Edit `profile/profile.yaml` with your identity and education.
-2. Populate `facts/*.yaml` with your real experience, projects, skills, courses.
-   These are the **factual boundary** — the agent won't claim anything not here.
-3. Add free-form write-ups to `context/` for richer material (optional but
-   recommended).
-
-> Tip: you can ask your agent to populate `facts/` and `context/` from an existing
-> resume or notes — just point it at the source and ask it to update the source of
-> truth (it edits inputs only when you explicitly ask).
-
-## Usage
-
-**Generate resumes for all new job descriptions:**
-Spawn your agent in the repo and ask, e.g. *"Build resumes for any new jobs."*
-
-**Target one job:** *"Build the resume for `jobs/acme-swe.md`."*
-
-**Refine an existing one:** *"For acme-swe, lead with the AWS project and cut the
-coursework."* The agent regenerates that resume with your feedback.
-
-**Manual compile** (to check LaTeX yourself):
-
-```bash
-scripts/build.sh resumes/acme-swe/resume.tex
-```
 
 ## The grounding contract
 
-Because the agent can synthesize new bullet wording, the guardrail is explicit:
-it may reword, reorder, select, and combine — but every concrete claim (employer,
-title, date, degree, metric, technology) must trace back to `facts/` or `context/`.
-Each generated bullet's source is recorded in `tailoring-notes.md`, so review is a
-quick scan. See `AGENTS.md` for the full contract.
+The agent may reword, reorder, select, and synthesize bullets — but every concrete claim (employer, title, date, degree, metric, technology) must trace back to `facts/` or `context/`. Each bullet's source is logged in `tailoring-notes.md`, so review is a quick scan. See `AGENTS.md` for the full contract.
 
 ## Design notes
 
-- **One page, always.** The agent compiles, checks the page count, and trims per
-  the style guide until it fits.
+- **One page, always.** The agent compiles, checks the page count, and trims until it fits.
 - **You are the reviewer.** Outputs are left uncommitted by design.
-- **Nondeterministic.** The same job description may yield slightly different
-  resumes across runs; review each PDF and use refine mode to steer.
+- **Nondeterministic.** The same JD may yield slightly different results across runs; use refine mode to steer.
