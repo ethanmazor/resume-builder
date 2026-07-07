@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Job Tracker</title>
+    <style>
+      :root {
+        --bg: #f0ece0; --ink: #1a1710; --card: #fffdf7; --line: #d4c9b0;
+        --muted: #7a6e5e; --col-w: 260px;
+        --c-saved:#6b7280; --c-applied:#2563eb; --c-interview:#7c3aed;
+        --c-offer:#059669; --c-accepted:#15803d; --c-rejected:#dc2626;
+      }
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:"Avenir Next","Gill Sans",system-ui,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;display:flex;flex-direction:column}
+      .topbar{display:flex;align-items:center;gap:14px;padding:12px 20px;background:#fff8ee;border-bottom:1px solid var(--line);flex-shrink:0}
+      .topbar h1{font-size:1.15rem;letter-spacing:.3px;flex:1}
+      .topbar .subtitle{font-size:.8rem;color:var(--muted)}
+      .poll-dot{width:8px;height:8px;border-radius:50%;background:#86efac;flex-shrink:0;transition:background .3s}
+      .poll-dot.active{background:#22c55e}
+      button,.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:none;font:inherit;font-size:.88rem;font-weight:600;cursor:pointer;text-decoration:none}
+      .btn-primary{background:#0f766e;color:#fff}
+      .btn-secondary{background:#b45309;color:#fff}
+      .btn-ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+      #flash-container{position:fixed;top:12px;right:16px;z-index:999;display:flex;flex-direction:column;gap:8px}
+      .flash{padding:10px 14px;border-radius:10px;font-size:.88rem;max-width:320px;animation:fadein .2s ease}
+      @keyframes fadein{from{opacity:0;transform:translateY(-6px)}to{opacity:1}}
+      .flash.success{background:#dcfce7;color:#166534;border:1px solid #86efac}
+      .flash.error{background:#fee2e2;color:#991b1b;border:1px solid #fca5a5}
+      .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:100;align-items:center;justify-content:center}
+      .overlay.open{display:flex}
+      .panel{background:var(--card);border-radius:16px;padding:24px;width:480px;max-width:96vw;box-shadow:0 20px 60px rgba(0,0,0,.18)}
+      .panel h2{margin-bottom:16px}
+      label{display:block;font-size:.84rem;color:var(--muted);margin-bottom:4px}
+      input,select,textarea{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;font:inherit;background:#fffefb;margin-bottom:12px}
+      textarea{resize:vertical;min-height:80px}
+      .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+      .board-wrap{flex:1;overflow-x:auto;overflow-y:hidden;padding:20px}
+      .board{display:flex;gap:14px;min-height:calc(100vh - 80px);align-items:flex-start}
+      .col{width:var(--col-w);flex-shrink:0;display:flex;flex-direction:column}
+      .col-header{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px 10px 0 0;font-weight:700;font-size:.82rem;letter-spacing:.4px;text-transform:uppercase;color:#fff}
+      .col-header .badge{margin-left:auto;background:rgba(255,255,255,.3);padding:1px 7px;border-radius:20px;font-size:.76rem}
+      .col[data-status="Saved"] .col-header{background:var(--c-saved)}
+      .col[data-status="Applied"] .col-header{background:var(--c-applied)}
+      .col[data-status="Interview"] .col-header{background:var(--c-interview)}
+      .col[data-status="Offer"] .col-header{background:var(--c-offer)}
+      .col[data-status="Accepted"] .col-header{background:var(--c-accepted)}
+      .col[data-status="Rejected"] .col-header{background:var(--c-rejected)}
+      .col-body{background:rgba(255,255,255,.55);border:1px solid var(--line);border-top:none;border-radius:0 0 10px 10px;min-height:120px;padding:8px;display:flex;flex-direction:column;gap:8px;flex:1;transition:background .15s}
+      .col-body.drag-over{background:rgba(15,118,110,.15)}
+      .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 12px;cursor:grab;user-select:none;box-shadow:0 2px 8px rgba(60,45,20,.06);transition:box-shadow .15s,transform .15s}
+      .card:hover{box-shadow:0 6px 18px rgba(60,45,20,.12)}
+      .card.dragging{opacity:.45;transform:scale(.97)}
+      .card-company{font-weight:700;font-size:.9rem}
+      .card-role{font-size:.82rem;color:#3f3830;margin-top:1px}
+      .card-meta{font-size:.76rem;color:var(--muted);margin-top:3px}
+      .card-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:6px;border-top:1px solid var(--line)}
+      .card-footer a{font-size:.74rem;color:#2563eb;text-decoration:none}
+      .card-footer a:hover{text-decoration:underline}
+      .icon-btn{background:none;border:none;padding:2px 5px;cursor:pointer;font-size:.8rem;color:var(--muted);border-radius:5px}
+      .icon-btn:hover{background:var(--line);color:var(--ink)}
+      .note-list{max-height:260px;overflow-y:auto}
+      .note-item{background:#f9f5ed;border-radius:8px;padding:8px 10px;margin-bottom:8px;font-size:.84rem}
+      .note-item .note-meta{font-size:.74rem;color:var(--muted);margin-top:4px}
+    </style>
+  </head>
+  <body>
+    <div id="flash-container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}{% for cat,msg in messages %}<div class="flash {{cat}}">{{msg}}</div>{% endfor %}{% endif %}
+      {% endwith %}
+    </div>
+
+    <div class="topbar">
+      <h1>Job Tracker</h1>
+      <span class="subtitle" id="last-updated"></span>
+      <span class="poll-dot" id="poll-dot" title="Live polling — picks up agent CLI changes automatically"></span>
+      <button class="btn btn-ghost" onclick="openPanel('export-panel')">Export</button>
+      <button class="btn btn-primary" onclick="openPanel('add-panel')">+ Add Job</button>
+    </div>
+
+    <div class="board-wrap">
+      <div class="board" id="board">
+        {% for status in statuses %}
+        <div class="col" data-status="{{ status }}">
+          <div class="col-header">
+            {{ status }}
+            <span class="badge" id="badge-{{ status|replace(' ','-') }}">0</span>
+          </div>
+          <div class="col-body" id="col-{{ status|replace(' ','-') }}"
+               ondragover="onDragOver(event)"
+               ondragleave="onDragLeave(event)"
+               ondrop="onDrop(event,'{{ status }}')">
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <!-- Add Job -->
+    <div class="overlay" id="add-panel" onclick="closeOnOverlay(event,'add-panel')">
+      <div class="panel">
+        <h2>Add Job</h2>
+        <form method="post" action="/jobs">
+          <div class="row2">
+            <div><label>Company *</label><input name="company" required autofocus /></div>
+            <div><label>Role *</label><input name="role" required /></div>
+          </div>
+          <div class="row2">
+            <div><label>Posting URL</label><input name="posting_url" placeholder="https://..." /></div>
+            <div><label>Location</label><input name="location" placeholder="Remote / City" /></div>
+          </div>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+            <button type="button" class="btn btn-ghost" onclick="closePanel('add-panel')">Cancel</button>
+            <button type="submit" class="btn btn-primary">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Export -->
+    <div class="overlay" id="export-panel" onclick="closeOnOverlay(event,'export-panel')">
+      <div class="panel">
+        <h2>Export to Private GitHub Repo</h2>
+        <form method="post" action="/settings/export">
+          <label>Local clone path of private repo</label>
+          <input name="repo_path" value="{{ export_repo_path }}" placeholder="~/Code/my-tracker-export" />
+          <label>Branch</label>
+          <input name="branch" value="{{ export_branch }}" />
+          <div style="display:flex;gap:10px;justify-content:flex-end">
+            <button type="button" class="btn btn-ghost" onclick="closePanel('export-panel')">Cancel</button>
+            <button type="submit" class="btn btn-secondary">Save Settings</button>
+          </div>
+        </form>
+        <div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">
+          <form method="post" action="/export">
+            <button type="submit" class="btn btn-primary" style="width:100%">Export Snapshot Now</button>
+          </form>
+          <p style="font-size:.78rem;color:var(--muted);margin-top:8px">Writes JSON to tracker-web/exports/ and pushes to git if configured.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notes -->
+    <div class="overlay" id="notes-panel" onclick="closeOnOverlay(event,'notes-panel')">
+      <div class="panel">
+        <h2 id="notes-panel-title">Notes</h2>
+        <div class="note-list" id="note-list"></div>
+        <div style="margin-top:12px">
+          <label>Add note</label>
+          <textarea id="new-note-body" rows="3" placeholder="Interview feedback, follow-up, etc."></textarea>
+          <div style="display:flex;gap:10px;justify-content:flex-end">
+            <button type="button" class="btn btn-ghost" onclick="closePanel('notes-panel')">Close</button>
+            <button type="button" class="btn btn-primary" onclick="submitNote()">Add Note</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const STATUSES = {{ statuses|tojson }};
+      let lastUpdated = "";
+      let dragging = null;
+      let activeNotesAppId = null;
+
+      function openPanel(id){document.getElementById(id).classList.add("open")}
+      function closePanel(id){document.getElementById(id).classList.remove("open")}
+      function closeOnOverlay(e,id){if(e.target===e.currentTarget)closePanel(id)}
+
+      function showFlash(msg,type="success"){
+        const c=document.getElementById("flash-container");
+        const d=document.createElement("div");
+        d.className=`flash ${type}`;d.textContent=msg;c.appendChild(d);
+        setTimeout(()=>d.remove(),4000);
+      }
+
+      function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
+      function colId(s){return"col-"+s.replace(/ /g,"-")}
+      function badgeId(s){return"badge-"+s.replace(/ /g,"-")}
+
+      function renderCard(card){
+        const div=document.createElement("div");
+        div.className="card";div.draggable=true;
+        div.dataset.appId=card.application_id;
+        div.dataset.status=card.status;
+        const url=card.posting_url?`<a href="${esc(card.posting_url)}" target="_blank" rel="noreferrer">Posting ↗</a>`:`<span></span>`;
+        div.innerHTML=`
+          <div class="card-company">${esc(card.company)}</div>
+          <div class="card-role">${esc(card.role)}</div>
+          ${card.location?`<div class="card-meta">📍 ${esc(card.location)}</div>`:""}
+          ${card.applied_at?`<div class="card-meta">Applied: ${esc(card.applied_at)}</div>`:""}
+          ${card.next_action_at?`<div class="card-meta">Next: ${esc(card.next_action_at)}</div>`:""}
+          <div class="card-footer">${url}
+            <div class="card-actions">
+              <button class="icon-btn" title="Notes (${card.note_count})" onclick="openNotes(${card.application_id},'${esc(card.company)} – ${esc(card.role)}')">
+                🗒 ${card.note_count>0?card.note_count:""}
+              </button>
+            </div>
+          </div>`;
+        div.addEventListener("dragstart",e=>onDragStart(e,card));
+        div.addEventListener("dragend",()=>div.classList.remove("dragging"));
+        return div;
+      }
+
+      function renderBoard(columns){
+        for(const status of STATUSES){
+          const col=document.getElementById(colId(status));
+          if(!col)continue;
+          const cards=columns[status]||[];
+          col.innerHTML="";
+          for(const c of cards)col.appendChild(renderCard(c));
+          document.getElementById(badgeId(status)).textContent=cards.length;
+        }
+      }
+
+      async function poll(){
+        const dot=document.getElementById("poll-dot");
+        try{
+          const res=await fetch("/api/board");
+          if(!res.ok)return;
+          const data=await res.json();
+          if(dragging)return;
+          if(data.last_updated!==lastUpdated){
+            lastUpdated=data.last_updated;
+            renderBoard(data.columns);
+            if(lastUpdated)document.getElementById("last-updated").textContent=
+              "Updated "+lastUpdated.replace("T"," ").slice(0,19)+" UTC";
+          }
+          dot.classList.add("active");
+          setTimeout(()=>dot.classList.remove("active"),500);
+        }catch(_){}
+      }
+
+      poll();
+      setInterval(poll,5000);
+
+      function onDragStart(e,card){
+        dragging={applicationId:card.application_id,fromStatus:card.status};
+        e.currentTarget.classList.add("dragging");
+        e.dataTransfer.effectAllowed="move";
+      }
+      function onDragOver(e){e.preventDefault();e.currentTarget.classList.add("drag-over")}
+      function onDragLeave(e){e.currentTarget.classList.remove("drag-over")}
+
+      async function onDrop(e,newStatus){
+        e.preventDefault();
+        e.currentTarget.classList.remove("drag-over");
+        if(!dragging)return;
+        const{applicationId,fromStatus}=dragging;
+        dragging=null;
+        if(newStatus===fromStatus)return;
+        const fromCol=document.getElementById(colId(fromStatus));
+        const toCol=document.getElementById(colId(newStatus));
+        const card=fromCol&&fromCol.querySelector(`[data-app-id="${applicationId}"]`);
+        if(card&&toCol){
+          card.dataset.status=newStatus;toCol.appendChild(card);
+          document.getElementById(badgeId(fromStatus)).textContent=
+            Math.max(0,parseInt(document.getElementById(badgeId(fromStatus)).textContent)-1);
+          document.getElementById(badgeId(newStatus)).textContent=
+            parseInt(document.getElementById(badgeId(newStatus)).textContent)+1;
+        }
+        try{
+          const res=await fetch(`/api/applications/${applicationId}/status`,{
+            method:"POST",headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({status:newStatus})
+          });
+          if(!res.ok)throw new Error();
+        }catch(_){showFlash("Status update failed — re-syncing.","error");await poll()}
+      }
+
+      async function openNotes(appId,title){
+        activeNotesAppId=appId;
+        document.getElementById("notes-panel-title").textContent=title+" — Notes";
+        document.getElementById("new-note-body").value="";
+        document.getElementById("note-list").innerHTML="<em style='color:var(--muted);font-size:.84rem'>Loading…</em>";
+        openPanel("notes-panel");
+        const res=await fetch(`/api/applications/${appId}/notes`);
+        const data=await res.json();
+        const list=document.getElementById("note-list");
+        list.innerHTML="";
+        if(!data.notes.length){list.innerHTML="<em style='color:var(--muted);font-size:.84rem'>No notes yet.</em>";return}
+        for(const n of data.notes){
+          const d=document.createElement("div");d.className="note-item";
+          d.innerHTML=`${esc(n.body)}<div class="note-meta">${esc(n.created_at.slice(0,19).replace("T"," "))} UTC</div>`;
+          list.appendChild(d);
+        }
+      }
+
+      async function submitNote(){
+        const body=document.getElementById("new-note-body").value.trim();
+        if(!body||!activeNotesAppId)return;
+        const res=await fetch(`/api/applications/${activeNotesAppId}/notes`,{
+          method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({body})
+        });
+        if(res.ok){showFlash("Note added.");openNotes(activeNotesAppId,document.getElementById("notes-panel-title").textContent.replace(" — Notes",""))}
+        else showFlash("Failed to add note.","error");
+      }
+
+      document.querySelectorAll(".flash").forEach(el=>setTimeout(()=>el.remove(),5000));
+    </script>
+  </body>
+</html>

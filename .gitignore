@@ -33,3 +33,9 @@ Thumbs.db
 *.swp
 .idea/
 .vscode/
+
+# Local job-tracker runtime artifacts
+tracker-web/.venv/
+tracker-web/data/
+tracker-web/exports/
+tracker-web/__pycache__/

@@ -41,6 +41,10 @@ The agent tailors content from your source of truth, compiles a PDF, and writes 
 | Goal | Prompt |
 |------|--------|
 | First-time setup from a data folder | *"My data is at ~/my-data — bootstrap my source of truth."* |
+| Start local tracker web app | *"start tracker"* |
+| Add a job via agent (no server needed) | *"add Acme SWE role to tracker"* |
+| Update status via agent | *"mark Acme as Rejected"* |
+| List all applications | *"list my applications"* |
 | Sync new material from your external folder | *"sync my data"* |
 | Fetch JD from URL(s) | *"fetch this job: https://..."* or *"fetch these jobs: https://..., https://..."* |
 | Build all pending resumes | *"Build resumes for any new jobs."* |
@@ -66,6 +70,8 @@ If your folder already uses this repo's `facts/` / `profile/` / `context/` schem
 |------|---------|
 | `AGENTS.md` | Canonical agent instructions (auto-loaded by most agent CLIs). |
 | `skills/bootstrap/SKILL.md` | One-time ingestion of an external data folder into this repo's source of truth. |
+| `skills/start-tracker/SKILL.md` | Starts the local job-tracker web server. |
+| `skills/tracker-cli/SKILL.md` | Agent writes Python sqlite3 directly to the tracker DB — no CLI script, no server needed. |
 | `skills/sync/SKILL.md` | Incremental sync from the external data folder after bootstrap. |
 | `skills/fetch-job/SKILL.md` | Fetch one or more job posting URLs into normalized `data/jobs/*.md` files. |
 | `skills/build-resume/SKILL.md` | Step-by-step resume generation procedure. |
@@ -77,6 +83,7 @@ If your folder already uses this repo's `facts/` / `profile/` / `context/` schem
 | `data/resumes/` | Output — one folder per job. |
 | `template/STYLE_GUIDE.md` | Jake's Resume LaTeX style guide the agent authors against. |
 | `scripts/build.sh` | Compile with Tectonic + verify one page with `pdfinfo`. |
+| `scripts/start-tracker.sh` | Start the local job-tracker web app on `http://127.0.0.1:5050`. |
 
 ## The grounding contract
 

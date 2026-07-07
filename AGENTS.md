@@ -8,13 +8,15 @@ ATS-friendly LaTeX resumes tailored to specific job descriptions.
 
 ## Skills
 
-Four agent skills live in `skills/`:
+Six agent skills live in `skills/`:
 
 | Skill | Trigger | What it does |
 |-------|---------|-------------|
 | `bootstrap` | *"My data is at /path — bootstrap my source of truth"* | First-time setup: ingests an external data folder and populates `data/profile/`, `data/facts/`, `data/context/`, and `data/projects/`. Writes `.sync-config.yaml`. |
 | `sync` | *"sync my data"* | Incrementally merges new content from the data folder into the source of truth. Skips anything already present. |
 | `fetch-job` | *"fetch this job: https://..."* | Fetches one or more job-posting URLs, parses JD metadata/keywords, and writes `data/jobs/{company-role}.md`. |
+| `start-tracker` | *"start tracker"* | Launches the local job-tracker web app on `http://127.0.0.1:5050`. |
+| `tracker-cli` | *"add Acme SWE to tracker"*, *"mark Acme as Rejected"*, *"list my applications"* | Agent writes Python sqlite3 code directly to update the tracker DB. Kanban board auto-picks up changes via polling. |
 | `build-resume` | Drop a JD in `data/jobs/`, ask agent to build | Generates a tailored one-page PDF resume |
 
 **If `data/profile/profile.yaml` does not exist yet, run `bootstrap` before anything else.**
@@ -31,6 +33,7 @@ Four agent skills live in `skills/`:
 | `data/jobs/` | Input job descriptions: `data/jobs/{company-role}.md` (raw JD text + optional `## Hints`). |
 | `data/resumes/` | Output. One folder per job: `resume.pdf`, `resume.tex`, `tailoring-notes.md`. |
 | `scripts/build.sh` | Compile with Tectonic + verify one page with `pdfinfo`. |
+| `scripts/start-tracker.sh` | Start the local job-tracker web app (creates venv and installs deps if needed). |
 
 ## The grounding contract (non-negotiable)
 
