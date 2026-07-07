@@ -6,15 +6,15 @@ No CI, no API keys, no cloud. Runs entirely on your machine via a coding agent (
 
 ## How it works
 
-You keep a **data folder** — any directory with your materials: an old resume PDF, project notes, code, markdown write-ups, whatever you have. The agent reads it and builds the structured source of truth inside this repo. After that, drop a job description in `jobs/` and ask it to build.
+You keep a **data folder** — any directory with your materials: an old resume PDF, project notes, code, markdown write-ups, whatever you have. The agent reads it and builds the structured source of truth inside this repo. After that, add job descriptions in `data/jobs/` and ask it to build.
 
 ```
 ~/my-resume-data/        ← your folder: old resume, notes, project docs, code
         |
         v
   resume-builder/        ← this repo (cloned once)
-    agent ingests  ──>  profile/  facts/  context/  projects/
-    agent builds   ──>  resumes/acme-swe/resume.pdf
+    agent ingests  ──>  data/profile/  data/facts/  data/context/  data/projects/
+    agent builds   ──>  data/resumes/acme-swe/resume.pdf
 ```
 
 ## Quickstart
@@ -29,21 +29,22 @@ Open the repo in your coding agent and say:
 
 > *"My data is at ~/my-resume-data — bootstrap my source of truth."*
 
-The agent scans your folder, extracts what it can from every readable file, populates `profile/profile.yaml`, `facts/`, and `context/`, then asks clarifying questions for anything it can't determine automatically. Once done:
+The agent scans your folder, extracts what it can from every readable file, populates `data/profile/profile.yaml`, `data/facts/`, and `data/context/`, then asks clarifying questions for anything it can't determine automatically. Once done:
 
-1. Drop a job description into `jobs/acme-swe.md` (paste raw JD; add an optional `## Hints` section to steer the agent)
+1. Add a job description file in `data/jobs/acme-swe.md` (paste raw JD; add an optional `## Hints` section to steer the agent), or ask the agent to fetch from a URL
 2. Ask: *"Build resumes for any new jobs."*
 
-The agent tailors content from your source of truth, compiles a PDF, and writes outputs to `resumes/acme-swe/`. **You review and commit. The agent never commits.**
+The agent tailors content from your source of truth, compiles a PDF, and writes outputs to `data/resumes/acme-swe/`. **You review and commit. The agent never commits.**
 
 ## What to say to your agent
 
 | Goal | Prompt |
 |------|--------|
 | First-time setup from a data folder | *"My data is at ~/my-data — bootstrap my source of truth."* |
-| Add new material after initial setup | *"Process `inbox/new-project/`."* |
+| Sync new material from your external folder | *"sync my data"* |
+| Fetch JD from URL(s) | *"fetch this job: https://..."* or *"fetch these jobs: https://..., https://..."* |
 | Build all pending resumes | *"Build resumes for any new jobs."* |
-| Target one JD | *"Build the resume for `jobs/acme-swe.md`."* |
+| Target one JD | *"Build the resume for `data/jobs/acme-swe.md`."* |
 | Refine an existing resume | *"For acme-swe, lead with the AWS project and cut coursework."* |
 | Check build toolchain | *"Verify my build toolchain is set up."* |
 
@@ -65,21 +66,21 @@ If your folder already uses this repo's `facts/` / `profile/` / `context/` schem
 |------|---------|
 | `AGENTS.md` | Canonical agent instructions (auto-loaded by most agent CLIs). |
 | `skills/bootstrap/SKILL.md` | One-time ingestion of an external data folder into this repo's source of truth. |
+| `skills/sync/SKILL.md` | Incremental sync from the external data folder after bootstrap. |
+| `skills/fetch-job/SKILL.md` | Fetch one or more job posting URLs into normalized `data/jobs/*.md` files. |
 | `skills/build-resume/SKILL.md` | Step-by-step resume generation procedure. |
-| `skills/ingest-inbox/SKILL.md` | Adds new material from `inbox/` to an already-populated source of truth. |
-| `profile/profile.yaml` | Your identity, contact info, and education. Never tailored. |
-| `facts/` | **Factual guardrail.** Experience, projects, skills, courses. The agent won't claim anything not here. |
-| `context/` | Free-form brag docs / write-ups. Richer material to draw wording from. |
-| `projects/` | Raw code, schematics, resources per project. |
-| `inbox/` | Drop zone for new material after initial bootstrap. |
-| `jobs/` | Input job descriptions, one file per role. |
-| `resumes/` | Output — one folder per job. |
+| `data/profile/profile.yaml` | Your identity, contact info, and education. Never tailored. |
+| `data/facts/` | **Factual guardrail.** Experience, projects, skills, courses. The agent won't claim anything not here. |
+| `data/context/` | Free-form brag docs / write-ups. Richer material to draw wording from. |
+| `data/projects/` | Raw code, schematics, resources per project. |
+| `data/jobs/` | Input job descriptions, one file per role. |
+| `data/resumes/` | Output — one folder per job. |
 | `template/STYLE_GUIDE.md` | Jake's Resume LaTeX style guide the agent authors against. |
 | `scripts/build.sh` | Compile with Tectonic + verify one page with `pdfinfo`. |
 
 ## The grounding contract
 
-The agent may reword, reorder, select, and synthesize bullets — but every concrete claim (employer, title, date, degree, metric, technology) must trace back to `facts/` or `context/`. Each bullet's source is logged in `tailoring-notes.md`, so review is a quick scan. See `AGENTS.md` for the full contract.
+The agent may reword, reorder, select, and synthesize bullets — but every concrete claim (employer, title, date, degree, metric, technology) must trace back to `data/facts/` or `data/context/`. Each bullet's source is logged in `tailoring-notes.md`, so review is a quick scan. See `AGENTS.md` for the full contract.
 
 ## Design notes
 

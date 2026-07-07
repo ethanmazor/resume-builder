@@ -8,12 +8,13 @@ ATS-friendly LaTeX resumes tailored to specific job descriptions.
 
 ## Skills
 
-Three agent skills live in `skills/`:
+Four agent skills live in `skills/`:
 
 | Skill | Trigger | What it does |
 |-------|---------|-------------|
 | `bootstrap` | *"My data is at /path — bootstrap my source of truth"* | First-time setup: ingests an external data folder and populates `data/profile/`, `data/facts/`, `data/context/`, and `data/projects/`. Writes `.sync-config.yaml`. |
 | `sync` | *"sync my data"* | Incrementally merges new content from the data folder into the source of truth. Skips anything already present. |
+| `fetch-job` | *"fetch this job: https://..."* | Fetches one or more job-posting URLs, parses JD metadata/keywords, and writes `data/jobs/{company-role}.md`. |
 | `build-resume` | Drop a JD in `data/jobs/`, ask agent to build | Generates a tailored one-page PDF resume |
 
 **If `data/profile/profile.yaml` does not exist yet, run `bootstrap` before anything else.**
@@ -25,7 +26,7 @@ Three agent skills live in `skills/`:
 | `data/profile/` | Static identity: name, contact, links, education. Never tailored. |
 | `data/facts/` | **Structured factual guardrail.** Experiences, projects, research, skills, courses. The boundary of what is true. |
 | `data/context/` | Free-form "brag docs" / write-ups. Richer material to draw wording from. |
-| `data/projects/` | Raw code, schematics, and resources. The agent reads `context/` summaries, not these directly. |
+| `data/projects/` | Raw code, schematics, and resources. The agent reads `data/context/` summaries, not these directly. |
 | `template/` | Jake's Resume base + `STYLE_GUIDE.md`. You author `resume.tex` per this. |
 | `data/jobs/` | Input job descriptions: `data/jobs/{company-role}.md` (raw JD text + optional `## Hints`). |
 | `data/resumes/` | Output. One folder per job: `resume.pdf`, `resume.tex`, `tailoring-notes.md`. |

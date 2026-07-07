@@ -27,13 +27,13 @@ Determine the target job(s) in this priority order:
    `data/jobs/acme-swe.md`"). Build only that one.
 2. **Refine mode** — the owner gave feedback on an existing resume
    (e.g. "for acme-swe, lead with the AWS project"). Regenerate that one resume,
-   applying the feedback. Read the existing `data/data/resumes/{slug}/tailoring-notes.md`
+   applying the feedback. Read the existing `data/resumes/{slug}/tailoring-notes.md`
    for continuity.
 3. **Auto-detect (default)** — for every `data/jobs/{slug}.md` that has **no**
-   `data/data/data/resumes/{slug}/resume.pdf`, build it. The `{slug}` is the JD filename without
+   `data/resumes/{slug}/resume.pdf`, build it. The `{slug}` is the JD filename without
    `.md`. If everything is already built, say so and stop.
 
-`{slug}` = the JD filename stem. `data/data/resumes/{slug}/` is its output folder.
+`{slug}` = the JD filename stem. `data/resumes/{slug}/` is its output folder.
 
 ---
 
@@ -108,7 +108,7 @@ See the style guide's "Filling the page" section for the priority order.
 Author the LaTeX following [`../../template/STYLE_GUIDE.md`](../../template/STYLE_GUIDE.md)
 (Jake's Resume style). Do **not** blindly fill a rigid template — author the
 document so it can be trimmed structurally to fit one page. Write it to
-`data/data/data/resumes/{slug}/resume.tex`.
+`data/resumes/{slug}/resume.tex`.
 
 Use `data/profile/profile.yaml` for the header (name, contact, links) and education.
 - Always include `citizenship: "US Citizen"` in the header.
@@ -122,14 +122,14 @@ Use `data/profile/profile.yaml` for the header (name, contact, links) and educat
 Use the helper (compiles + reports page count):
 
 ```bash
-scripts/build.sh data/data/data/resumes/{slug}/resume.tex
+scripts/build.sh data/resumes/{slug}/resume.tex
 ```
 
 Or manually:
 
 ```bash
-tectonic -o data/resumes/{slug} data/data/resumes/{slug}/resume.tex
-pdfinfo data/data/data/resumes/{slug}/resume.pdf | grep -i '^Pages:'
+tectonic -o data/resumes/{slug} data/resumes/{slug}/resume.tex
+pdfinfo data/resumes/{slug}/resume.pdf | grep -i '^Pages:'
 ```
 
 If the PDF is **more than one page**, trim and recompile. Apply this
@@ -156,7 +156,7 @@ If a fixed compile error occurs, read the Tectonic log, fix the LaTeX, recompile
 
 ## 7. Write the tailoring notes
 
-Write `data/data/resumes/{slug}/tailoring-notes.md`:
+Write `data/resumes/{slug}/tailoring-notes.md`:
 
 ```markdown
 # Tailoring notes — {Company} / {Role}
@@ -185,7 +185,7 @@ JD keyword could not be truthfully claimed, note it — do not fabricate coverag
 
 ## 8. Finish
 
-- Confirm `data/data/resumes/{slug}/` contains `resume.pdf` (1 page), `resume.tex`,
+- Confirm `data/resumes/{slug}/` contains `resume.pdf` (1 page), `resume.tex`,
   `tailoring-notes.md`.
 - **Do NOT commit.** Leave everything uncommitted.
 - Report to the owner: which resume(s) you built, the emphasis taken, any trims,

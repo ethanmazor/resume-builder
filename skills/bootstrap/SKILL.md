@@ -23,7 +23,7 @@ that folder end-to-end and writes the contents into this repo's
 `data/profile/profile.yaml`, `data/facts/*.yaml`, `data/context/*.md`, and `data/projects/`.
 
 Run this skill **once** on first setup, or when rebuilding from a new data
-source. For adding individual new projects after setup, use `ingest-inbox`.
+source. For incremental updates after setup, use `sync`.
 
 ## Hard rules
 
