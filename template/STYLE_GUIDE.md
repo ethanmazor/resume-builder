@@ -134,12 +134,13 @@ provide. Keep the header to a single contact line if possible.
 ```latex
 \section{Projects}
   \resumeSubHeadingListStart
-    \resumeProjectHeading{\textbf{Foo} $|$ \emph{Go, SQLite}}{2024}
+    \resumeProjectHeading{\textbf{Foo} $|$ \emph{Go, SQLite}}{}
       \resumeItemListStart
         \resumeItem{Tailored bullet grounded in facts/projects.yaml#foo-b1.}
       \resumeItemListEnd
   \resumeSubHeadingListEnd
 ```
+Note: the second argument to `\resumeProjectHeading` is always left **empty** (`{}`). Project entries do not include dates.
 
 **Technical Skills**
 ```latex
