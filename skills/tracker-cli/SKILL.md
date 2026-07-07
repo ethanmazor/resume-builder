@@ -14,6 +14,8 @@ triggers:
   - "list my applications"
   - "show tracker"
   - "search tracker"
+user-invocable: true
+argument-hint: "<free-form instruction, e.g. 'mark Acme SWE as Interviewing'>"
 ---
 
 # Tracker CLI Skill

@@ -8,18 +8,22 @@ ATS-friendly LaTeX resumes tailored to specific job descriptions.
 
 ## Skills
 
-Six agent skills live in `skills/`:
+Seven agent skills live in `skills/`. Each is marked `user-invocable: true`, so
+it's also available as a slash command (e.g. `/bootstrap`, `/build-resume`) in
+agent CLIs that support skill-based slash commands, in addition to matching on
+its natural-language triggers.
 
-| Skill | Trigger | What it does |
-|-------|---------|-------------|
-| `bootstrap` | *"My data is at /path — bootstrap my source of truth"* | First-time setup: ingests an external data folder and populates `data/profile/`, `data/facts/`, `data/context/`, and `data/projects/`. Writes `.sync-config.yaml`. |
-| `sync` | *"sync my data"* | Incrementally merges new content from the data folder into the source of truth. Skips anything already present. |
-| `fetch-job` | *"fetch this job: https://..."* | Fetches one or more job-posting URLs, parses JD metadata/keywords, and writes `data/jobs/{company-role}.md`. |
-| `start-tracker` | *"start tracker"* | Launches the local job-tracker web app on `http://127.0.0.1:5050`. |
-| `tracker-cli` | *"add Acme SWE to tracker"*, *"mark Acme as Rejected"*, *"list my applications"* | Agent writes Python sqlite3 code directly to update the tracker DB. Kanban board auto-picks up changes via polling. |
-| `build-resume` | Drop a JD in `data/jobs/`, ask agent to build | Generates a tailored one-page PDF resume |
+| Skill | Slash command | Trigger | What it does |
+|-------|---------------|---------|-------------|
+| `first-time-setup` | `/first-time-setup` | *"get me set up"*, *"how do I get started"* | Guided walkthrough for a brand-new clone: checks the toolchain, runs `bootstrap` if empty, explains the day-to-day workflow. |
+| `bootstrap` | `/bootstrap` | *"My data is at /path — bootstrap my source of truth"* | First-time setup: ingests an external data folder and populates `data/profile/`, `data/facts/`, `data/context/`, and `data/projects/`. Writes `.sync-config.yaml`. |
+| `sync` | `/sync` | *"sync my data"* | Incrementally merges new content from the data folder into the source of truth. Skips anything already present. |
+| `fetch-job` | `/fetch-job` | *"fetch this job: https://..."* | Fetches one or more job-posting URLs, parses JD metadata/keywords, and writes `data/jobs/{company-role}.md`. |
+| `start-tracker` | `/start-tracker` | *"start tracker"* | Launches the local job-tracker web app on `http://127.0.0.1:5050`. |
+| `tracker-cli` | `/tracker-cli` | *"add Acme SWE to tracker"*, *"mark Acme as Rejected"*, *"list my applications"* | Agent writes Python sqlite3 code directly to update the tracker DB. Kanban board auto-picks up changes via polling. |
+| `build-resume` | `/build-resume` | Drop a JD in `data/jobs/`, ask agent to build | Generates a tailored one-page PDF resume |
 
-**If `data/profile/profile.yaml` does not exist yet, run `bootstrap` before anything else.**
+**If `data/profile/profile.yaml` does not exist yet, run `first-time-setup` (or `bootstrap` directly) before anything else.**
 
 ## Repository map
 

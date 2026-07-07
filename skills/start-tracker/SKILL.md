@@ -8,6 +8,7 @@ triggers:
   - "start the web tracker"
   - "run tracker"
   - "launch tracker web app"
+user-invocable: true
 ---
 
 # Start Tracker Skill

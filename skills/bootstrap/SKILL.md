@@ -10,6 +10,8 @@ triggers:
   - "import from"
   - "set up my source of truth"
   - "populate from"
+user-invocable: true
+argument-hint: "<path-to-your-data-folder>"
 ---
 
 # Bootstrap Skill

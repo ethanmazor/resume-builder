@@ -10,6 +10,7 @@ triggers:
   - "sync from my data folder"
   - "sync"
   - "update my source of truth"
+user-invocable: true
 ---
 
 # Sync Skill

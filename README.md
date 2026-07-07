@@ -69,6 +69,7 @@ If your folder already uses this repo's `facts/` / `profile/` / `context/` schem
 | Path | Purpose |
 |------|---------|
 | `AGENTS.md` | Canonical agent instructions (auto-loaded by most agent CLIs). |
+| `skills/first-time-setup/SKILL.md` | Guided walkthrough for a brand-new clone: toolchain check, bootstrap, next steps. |
 | `skills/bootstrap/SKILL.md` | One-time ingestion of an external data folder into this repo's source of truth. |
 | `skills/start-tracker/SKILL.md` | Starts the local job-tracker web server. |
 | `skills/tracker-cli/SKILL.md` | Agent writes Python sqlite3 directly to the tracker DB — no CLI script, no server needed. |

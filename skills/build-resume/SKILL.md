@@ -1,3 +1,18 @@
+---
+name: build-resume
+description: >
+  Generate a one-page, ATS-friendly, tailored LaTeX resume from this repo's
+  source of truth for a job description in data/jobs/. Compiles with Tectonic
+  and enforces exactly one page.
+triggers:
+  - "build a resume for"
+  - "build the resume for"
+  - "generate a resume for"
+  - "tailor a resume for"
+user-invocable: true
+argument-hint: "[job-slug or company/role — omit to auto-build all pending jobs]"
+---
+
 # SKILL: build-resume
 
 Generate one-page, tailored LaTeX resumes from this repo's source of truth.

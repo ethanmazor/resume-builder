@@ -9,6 +9,8 @@ triggers:
   - "fetch these jobs:"
   - "add job from"
   - "fetch job posting"
+user-invocable: true
+argument-hint: "<job-posting-url> [job-posting-url...]"
 ---
 
 # Fetch Job Skill
