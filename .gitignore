@@ -6,7 +6,7 @@ data/facts/
 data/context/
 data/jobs/
 # Subdirectory contents only — keep READMEs and .gitkeep placeholder files.
-data/resumes/*/
+resumes/*/
 data/projects/*/
 # Machine-local config written by bootstrap; contains the source data-folder path.
 .sync-config.yaml

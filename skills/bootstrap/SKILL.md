@@ -318,7 +318,52 @@ Experience: {company}
 
 ---
 
-## Step 9 — Write .sync-config.yaml
+## Step 9 — Build the bullet pool
+
+For every experience and project entry written in Steps 6–7, expand the `bullets:`
+array into a **comprehensive pre-approved pool** (aim for 6–10 bullets per entry).
+The pool is what the `build-resume` skill will SELECT from — it never writes new
+bullets from scratch.
+
+For each entry, read the corresponding `data/context/{slug}.md` write-up and
+generate bullets covering all the distinct angles described there. Tag each bullet:
+
+```yaml
+bullets:
+  - id: "{entry-id}-b1"
+    text: "Action verb + what you did + concrete result/scale."
+    skills: ["tech1", "tech2", "competency"]
+    angle: ["software"]          # one or more of: software, embedded, hardware,
+                                 # systems, data, security, research, general
+```
+
+**Angle guidance:**
+- `software` — general SWE, backend, full-stack, production systems
+- `embedded` — firmware, microcontrollers, device software, RTOS
+- `hardware` — digital design, FPGA, PCB, analog/mixed-signal, EE
+- `systems` — systems engineering, hardware-software interface, architecture
+- `data` — observability, analytics, data engineering, metrics
+- `security` — cybersecurity, SIEM, threat detection
+- `research` — academic, research-track, ML/AI, experimental
+- `general` — broadly applicable to any role type
+
+**Rules for pool bullets:**
+- Every claim must be factually grounded in the context write-up or the entry's
+  structured fields — no fabrication.
+- Bullets should be distinct (no two bullets making essentially the same claim).
+- Write in past tense, starting with a strong action verb.
+- Each bullet should make sense as a standalone line on a resume.
+- Do not duplicate bullets across entries (if two entries share a technology,
+  give each its own distinct angle).
+
+After generating the pool, show it to the owner for review before finalizing.
+Ask: *"Here is the proposed bullet pool for [entry]. Does any bullet need
+correction, removal, or rewording?"* Incorporate feedback, then write the
+final pool to `data/facts/`.
+
+---
+
+## Step 10 — Write .sync-config.yaml
 
 Write the following file to the repo root (it is gitignored — it stores only
 the local machine path and is never committed):
@@ -333,7 +378,7 @@ Replace the value with the absolute path resolved in Step 0.
 
 ---
 
-## Step 10 — Report
+## Step 11 — Report
 
 Write a brief summary to the terminal:
 
@@ -342,8 +387,8 @@ Bootstrap complete.
 
 Populated:
   data/profile/profile.yaml          ✓
-  data/facts/experience.yaml         ✓  (N entries)
-  data/facts/projects.yaml           ✓  (N entries)
+  data/facts/experience.yaml         ✓  (N entries, N total pool bullets)
+  data/facts/projects.yaml           ✓  (N entries, N total pool bullets)
   data/facts/skills.yaml             ✓
   data/context/                      ✓  (N files)
   data/projects/                     ✓  (N directories)

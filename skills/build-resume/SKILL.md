@@ -42,13 +42,13 @@ Determine the target job(s) in this priority order:
    `data/jobs/acme-swe.md`"). Build only that one.
 2. **Refine mode** — the owner gave feedback on an existing resume
    (e.g. "for acme-swe, lead with the AWS project"). Regenerate that one resume,
-   applying the feedback. Read the existing `data/resumes/{slug}/tailoring-notes.md`
+   applying the feedback. Read the existing `resumes/{slug}/tailoring-notes.md`
    for continuity.
 3. **Auto-detect (default)** — for every `data/jobs/{slug}.md` that has **no**
-   `data/resumes/{slug}/resume.pdf`, build it. The `{slug}` is the JD filename without
+   `resumes/{slug}/resume.pdf`, build it. The `{slug}` is the JD filename without
    `.md`. If everything is already built, say so and stop.
 
-`{slug}` = the JD filename stem. `data/resumes/{slug}/` is its output folder.
+`{slug}` = the JD filename stem. `resumes/{slug}/` is its output folder.
 
 ---
 
@@ -66,6 +66,25 @@ Keep a short list of the **top keywords/skills** the resume should surface. Thes
 drive selection and phrasing (and help with ATS keyword matching) — but only use
 keywords the owner can truthfully claim per the source of truth.
 
+### Skills gap resolution
+
+After extracting required skills/tools/languages from the JD, cross-reference
+against `data/facts/skills.yaml`. For any required item **not** present:
+
+1. **Stop and ask the owner** — list the missing items and ask: "The JD requires
+   [X, Y]. Do you have experience with these? Should I add any to your source of
+   truth, or include them on this resume only?"
+2. **Owner confirms one-time use** — include the skill in this resume's Technical
+   Skills section only. Do **not** add it to `data/facts/skills.yaml` or
+   `data/profile/`.
+3. **Owner confirms it should persist** — add it to `data/facts/skills.yaml`
+   (and note it in `tailoring-notes.md`), then include it in the resume.
+4. **Owner says they don't have it** — omit entirely; note the gap in
+   `tailoring-notes.md`.
+
+Never silently add skills to the source of truth, and never claim a skill the
+owner has not confirmed.
+
 ---
 
 ## 3. Load the source of truth
@@ -73,48 +92,54 @@ keywords the owner can truthfully claim per the source of truth.
 Read:
 - `data/profile/profile.yaml` — identity, contact, links, education (verbatim, never tailored).
 - `data/facts/experience.yaml`, `data/facts/projects.yaml`, `data/facts/skills.yaml`,
-  `data/facts/courses.yaml`, `data/facts/activities.yaml` — the factual guardrail + canonical
-  bullet inventory. Research and internship entries both live in `experience.yaml`.
-- `data/context/*.md` — free-form write-ups for richer wording.
+  `data/facts/courses.yaml`, `data/facts/activities.yaml` — the factual guardrail + pre-approved
+  bullet pool. Research and internship entries both live in `experience.yaml`.
+- `data/context/*.md` — free-form write-ups providing background; read for understanding,
+  not as a source of new bullets.
 
 **These are read-only inputs.** Do not modify them while generating a resume.
 
 ---
 
-## 4. Select and synthesize content (apply the grounding contract)
+## 4. Select bullets from the pool (do NOT synthesize)
 
-Goal: the strongest possible one-page resume for *this* JD.
+Goal: the strongest possible one-page resume for *this* JD, built entirely from
+pre-approved bullets in `data/facts/`.
 
-- **Select** the most relevant experiences, projects, skills, and bullets by
-  scoring each against the JD keywords/needs.
-- **Reorder** so the most relevant content leads (within each section and, where
-  the style guide allows, across sections).
-- **Reword / synthesize** bullets to mirror the JD's language and emphasize
-  matching impact — using strong action verbs and quantified outcomes **only
-  where a real number exists** in the source of truth.
-- **Skills section**: surface the JD-relevant skills the owner actually has.
+### Selection rules
 
-**Grounding contract (from AGENTS.md):** every concrete claim — employer, title,
-date, degree, metric, technology — must trace to `data/facts/` or `data/context/`.
-Synthesizing new wording is fine; inventing facts is forbidden. When in doubt,
-leave it out.
+- **Select, don't write.** Every bullet on the resume must come from the `bullets:`
+  pool in `data/facts/experience.yaml` or `data/facts/projects.yaml`. Do not
+  compose new bullet text. If no pool bullet covers a JD need, note the gap in
+  `tailoring-notes.md` and continue — do not fabricate coverage.
+- **Score by relevance.** For each experience/project, rank its pool bullets by
+  how well they match the JD's keywords, domain, and role type. Use the `angle`
+  and `skills` fields on each bullet as signals. Pick the top 2–4 per entry.
+- **Reorder entries** so the most relevant experience leads (reverse-chronological
+  within each relevance tier). See STYLE_GUIDE.md for the reverse-chron rule.
+- **Minor length adjustments are allowed.** A single pool bullet may be shortened
+  (condensed to one line, a clause removed) if it would otherwise overflow the
+  page — but the core claim and wording must remain faithful to the pool text.
+  Record the original bullet ID in tailoring-notes.md regardless.
+- **Skills section**: surface the JD-relevant subset of `data/facts/skills.yaml`.
 
-Track, for each bullet you place, **where it came from** (a `data/facts/` id or a
-`data/context/` file). You will record this in `tailoring-notes.md`.
+### Adding new bullets to the pool
 
-**Fill the page.** A one-page resume with visible empty space at the bottom is a
-worse outcome than one that uses the full page, even if that means including
-material that's a weaker match for the JD. After you've placed the strongly
-relevant content, if the page still has room:
-- Add back bullets you'd otherwise have cut for relevance (e.g. a 4th bullet on
-  a role, or a secondary project).
-- Add other real experiences/projects/research entries from `data/facts/` that are
-  less on-topic for this specific JD but still true and generally impressive
-  (e.g. surface the research entry on an embedded/hardware resume even though
-  the JD didn't ask for research — it's real signal and better than blank space).
-- Expand the Technical Skills section with more of the owner's real skills.
-- Only pad with **grounded, true** content — never invent filler to take up space.
-See the style guide's "Filling the page" section for the priority order.
+If you identify a true, grounded accomplishment that belongs in the pool but
+doesn't exist yet, **stop and propose it to the owner** rather than using it
+directly. The owner approves it, you add it to the appropriate `bullets:` array
+in `data/facts/`, and then it can be selected for this and future resumes.
+
+### Fill the page
+
+A one-page resume should use the whole page. If content runs short:
+1. Add back pool bullets you cut for relevance (a 4th bullet on a role, etc.).
+2. Surface an off-topic-but-real entry from `data/facts/` (e.g. the FPAA research
+   on an embedded resume, or the SCOMP peripheral on a software resume).
+3. Expand the Technical Skills section with more real skills.
+4. Add coursework/activities/certifications if previously cut.
+
+Only use bullets and entries that are already in `data/facts/` — never invent.
 
 ---
 
@@ -123,7 +148,7 @@ See the style guide's "Filling the page" section for the priority order.
 Author the LaTeX following [`../../template/STYLE_GUIDE.md`](../../template/STYLE_GUIDE.md)
 (Jake's Resume style). Do **not** blindly fill a rigid template — author the
 document so it can be trimmed structurally to fit one page. Write it to
-`data/resumes/{slug}/resume.tex`.
+`resumes/{slug}/resume.tex`.
 
 Use `data/profile/profile.yaml` for the header (name, contact, links) and education.
 - Always include `citizenship: "US Citizen"` in the header.
@@ -137,14 +162,14 @@ Use `data/profile/profile.yaml` for the header (name, contact, links) and educat
 Use the helper (compiles + reports page count):
 
 ```bash
-scripts/build.sh data/resumes/{slug}/resume.tex
+scripts/build.sh resumes/{slug}/resume.tex
 ```
 
 Or manually:
 
 ```bash
-tectonic -o data/resumes/{slug} data/resumes/{slug}/resume.tex
-pdfinfo data/resumes/{slug}/resume.pdf | grep -i '^Pages:'
+tectonic -o resumes/{slug} resumes/{slug}/resume.tex
+pdfinfo resumes/{slug}/resume.pdf | grep -i '^Pages:'
 ```
 
 If the PDF is **more than one page**, trim and recompile. Apply this
@@ -171,7 +196,7 @@ If a fixed compile error occurs, read the Tectonic log, fix the LaTeX, recompile
 
 ## 7. Write the tailoring notes
 
-Write `data/resumes/{slug}/tailoring-notes.md`:
+Write `resumes/{slug}/tailoring-notes.md`:
 
 ```markdown
 # Tailoring notes — {Company} / {Role}
@@ -200,7 +225,7 @@ JD keyword could not be truthfully claimed, note it — do not fabricate coverag
 
 ## 8. Finish
 
-- Confirm `data/resumes/{slug}/` contains `resume.pdf` (1 page), `resume.tex`,
+- Confirm `resumes/{slug}/` contains `resume.pdf` (1 page), `resume.tex`,
   `tailoring-notes.md`.
 - **Do NOT commit.** Leave everything uncommitted.
 - Report to the owner: which resume(s) you built, the emphasis taken, any trims,

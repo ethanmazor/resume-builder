@@ -14,7 +14,7 @@ You keep a **data folder** — any directory with your materials: an old resume 
         v
   resume-builder/        ← this repo (cloned once)
     agent ingests  ──>  data/profile/  data/facts/  data/context/  data/projects/
-    agent builds   ──>  data/resumes/acme-swe/resume.pdf
+    agent builds   ──>  resumes/acme-swe/resume.pdf
 ```
 
 ## Quickstart
@@ -34,7 +34,7 @@ The agent scans your folder, extracts what it can from every readable file, popu
 1. Add a job description file in `data/jobs/acme-swe.md` (paste raw JD; add an optional `## Hints` section to steer the agent), or ask the agent to fetch from a URL
 2. Ask: *"Build resumes for any new jobs."*
 
-The agent tailors content from your source of truth, compiles a PDF, and writes outputs to `data/resumes/acme-swe/`. **You review and commit. The agent never commits.**
+The agent tailors content from your source of truth, compiles a PDF, and writes outputs to `resumes/acme-swe/`. **You review and commit. The agent never commits.**
 
 ## What to say to your agent
 
@@ -81,7 +81,7 @@ If your folder already uses this repo's `facts/` / `profile/` / `context/` schem
 | `data/context/` | Free-form brag docs / write-ups. Richer material to draw wording from. |
 | `data/projects/` | Raw code, schematics, resources per project. |
 | `data/jobs/` | Input job descriptions, one file per role. |
-| `data/resumes/` | Output — one folder per job. |
+| `resumes/` | Output — one folder per job. |
 | `template/STYLE_GUIDE.md` | Jake's Resume LaTeX style guide the agent authors against. |
 | `scripts/build.sh` | Compile with Tectonic + verify one page with `pdfinfo`. |
 | `scripts/start-tracker.sh` | Start the local job-tracker web app on `http://127.0.0.1:5050`. |

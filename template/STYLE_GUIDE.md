@@ -129,6 +129,7 @@ provide. Keep the header to a single contact line if possible.
       \resumeItemListEnd
   \resumeSubHeadingListEnd
 ```
+Experience entries must be ordered **reverse-chronologically** (most recent role first, oldest last).
 
 **Projects**
 ```latex

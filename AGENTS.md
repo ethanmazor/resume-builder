@@ -35,25 +35,29 @@ its natural-language triggers.
 | `data/projects/` | Raw code, schematics, and resources. The agent reads `data/context/` summaries, not these directly. |
 | `template/` | Jake's Resume base + `STYLE_GUIDE.md`. You author `resume.tex` per this. |
 | `data/jobs/` | Input job descriptions: `data/jobs/{company-role}.md` (raw JD text + optional `## Hints`). |
-| `data/resumes/` | Output. One folder per job: `resume.pdf`, `resume.tex`, `tailoring-notes.md`. |
+| `resumes/` | Output. One folder per job: `resume.pdf`, `resume.tex`, `tailoring-notes.md`. |
 | `scripts/build.sh` | Compile with Tectonic + verify one page with `pdfinfo`. |
 | `scripts/start-tracker.sh` | Start the local job-tracker web app (creates venv and installs deps if needed). |
 
 ## The grounding contract (non-negotiable)
 
-You may **reword, reorder, select, and synthesize new bullets** — but every
-concrete claim must trace back to something the owner actually wrote in `data/facts/`
-or `data/context/`.
+Resumes are built by **selecting** bullets from the pre-approved pool in
+`data/facts/` — not by synthesizing new wording. Every bullet on a resume
+must have a corresponding `id` in `data/facts/experience.yaml` or
+`data/facts/projects.yaml`.
 
-- ✅ Allowed: rephrasing a canonical bullet; combining two real accomplishments;
-  writing a new bullet whose facts come from a `data/context/` write-up; emphasizing
-  the skills/keywords the JD asks for.
-- ❌ Forbidden: inventing employers, job titles, dates, degrees, certifications,
-  metrics/numbers, or technologies that are **not present** in `data/facts/` or
-  `data/context/`. Do not exaggerate scope or seniority.
+- ✅ Allowed: selecting pool bullets; reordering them; lightly condensing a
+  bullet's length for line-fit; combining two pool bullets into one line if
+  both IDs are cited in `tailoring-notes.md`.
+- ✅ Allowed: proposing a new pool bullet to the owner (they approve, you add
+  it to `data/facts/`, then it can be used).
+- ❌ Forbidden: writing new bullet text not in the pool; inventing employers,
+  job titles, dates, degrees, certifications, metrics/numbers, or technologies
+  not present in `data/facts/` or `data/context/`. Do not exaggerate scope or
+  seniority.
 
-Every tailored bullet must cite its source in `tailoring-notes.md`. If you cannot
-ground a claim, do not make it.
+Every placed bullet must cite its pool ID in `tailoring-notes.md`. If you cannot
+cover a JD need from the pool, note the gap — do not fabricate coverage.
 
 ## Hard rules
 

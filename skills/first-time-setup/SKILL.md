@@ -72,7 +72,9 @@ Ask the owner (unless they already gave a path as this skill's argument):
 
 Once you have a path, run the **`bootstrap`** skill against it
 (`skills/bootstrap/SKILL.md`) — do not reimplement its logic here, invoke it.
-After bootstrap finishes, review its gap report with the owner before moving on.
+Bootstrap will ingest the data AND build a comprehensive bullet pool for each
+experience and project. After bootstrap finishes, review its gap report and
+bullet pool proposals with the owner before moving on.
 
 ---
 
@@ -96,7 +98,7 @@ Tell the owner, briefly, what happens next:
 1. **Add a job description** — drop a JD in `data/jobs/{company-role}.md`, or
    ask to fetch one directly: *"fetch this job: https://..."* (`fetch-job` skill).
 2. **Build a tailored resume** — *"build a resume for {company-role}"*
-   (`build-resume` skill). Output lands in `data/resumes/{slug}/`.
+   (`build-resume` skill). Output lands in `resumes/{slug}/`.
 3. **Track applications** (optional) — *"add {company} {role} to tracker"*
    (`tracker-cli` skill), or *"start tracker"* to open the kanban board
    (`start-tracker` skill) at `http://127.0.0.1:5050`.
