@@ -20,6 +20,10 @@ agent prompt.
 
 Use this when the owner asks to launch the tracker UI.
 
+Tracker runtime data is externalized: `tracker.db` and JSON exports live under
+`${WORKSPACE_ROOT}/tracker/`, where `WORKSPACE_ROOT` is read from
+`.sync-config.yaml` (`workspace_path`).
+
 ## Steps
 
 1. `cd` into the repo root first, then run:

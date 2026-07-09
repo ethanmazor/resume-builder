@@ -27,6 +27,10 @@ that folder end-to-end and writes the contents into this repo's
 Run this skill **once** on first setup, or when rebuilding from a new data
 source. For incremental updates after setup, use `sync`.
 
+**Path convention:** in this skill, every `data/...` and `resumes/...` path is
+relative to `WORKSPACE_ROOT` (set in `.sync-config.yaml` as `workspace_path`),
+not the repository root.
+
 ## Hard rules
 
 - **Never fabricate.** Write only what you can read in the source files or

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sqlite3
 import subprocess
 from datetime import datetime, timezone
@@ -10,8 +11,8 @@ from typing import Any
 from flask import Flask, flash, jsonify, redirect, render_template, request, url_for
 
 BASE_DIR = Path(__file__).resolve().parent
-DATA_DIR = BASE_DIR / "data"
-EXPORTS_DIR = BASE_DIR / "exports"
+DATA_DIR = Path(os.environ.get("TRACKER_DATA_DIR", str(BASE_DIR / "data"))).expanduser().resolve()
+EXPORTS_DIR = Path(os.environ.get("TRACKER_EXPORTS_DIR", str(BASE_DIR / "exports"))).expanduser().resolve()
 DB_PATH = DATA_DIR / "tracker.db"
 
 STATUS_OPTIONS = [

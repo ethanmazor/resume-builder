@@ -26,6 +26,10 @@ to the other skills rather than duplicating their logic.
 Run this top-to-bottom, stopping to ask the owner questions where noted. Don't
 skip steps just because they look done — verify each one.
 
+**Path convention:** in this skill, every `data/...` and `resumes/...` path is
+relative to `WORKSPACE_ROOT` (set in `.sync-config.yaml` as `workspace_path`),
+not the repository root.
+
 ---
 
 ## Step 1 — Check the toolchain

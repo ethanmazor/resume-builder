@@ -1,6 +1,7 @@
-# ── Personal data ────────────────────────────────────────────────────────────
-# This repo is public. All personal content lives under data/. None of it
-# should ever be committed except structural placeholder files.
+# ── Personal data (legacy safety net) ───────────────────────────────────────
+# Personal content now lives outside this repo at workspace_path in
+# .sync-config.yaml. Keep these ignores as a hard stop if data folders are
+# accidentally recreated locally.
 data/profile/
 data/facts/
 data/context/

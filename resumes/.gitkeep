@@ -1,3 +1,0 @@
-# Generated resumes live here — one folder per job description.
-# The agent creates resumes/{slug}/ containing resume.pdf, resume.tex, and
-# tailoring-notes.md. This file just keeps the directory in git.

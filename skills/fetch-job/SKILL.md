@@ -21,6 +21,9 @@ The owner provides one or more job-posting URLs. This skill fetches each page,
 extracts and cleans the JD content, derives a stable slug, and writes a
 structured markdown file to `data/jobs/{slug}.md`.
 
+**Path convention:** `data/jobs/...` is relative to `WORKSPACE_ROOT` (set in
+`.sync-config.yaml` as `workspace_path`), not the repository root.
+
 This gives the owner a reviewable job file with:
 - source URL and fetch date
 - role metadata (company, role, seniority, location)

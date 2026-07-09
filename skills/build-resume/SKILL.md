@@ -19,6 +19,10 @@ Generate one-page, tailored LaTeX resumes from this repo's source of truth.
 Read [`../../AGENTS.md`](../../AGENTS.md) first for repo context and the
 **grounding contract**. This file is the exact procedure to follow.
 
+**Path convention:** in this skill, every `data/...` and `resumes/...` path is
+relative to `WORKSPACE_ROOT` (set in `.sync-config.yaml` as `workspace_path`),
+not the repository root.
+
 ---
 
 ## 0. Preflight

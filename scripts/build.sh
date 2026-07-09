@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # build.sh — compile a resume .tex with Tectonic and verify it is one page.
 #
-# Usage: scripts/build.sh resumes/{slug}/resume.tex
+# Usage: scripts/build.sh /absolute/or/relative/path/to/resume.tex
 #
 # Compiles the given .tex into the same folder and prints the page count.
 # Exits non-zero (and warns) if the PDF is not exactly one page, so the agent

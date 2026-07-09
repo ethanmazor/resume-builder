@@ -29,6 +29,10 @@ repo, those edits are preserved.
 
 Run this skill whenever the data folder gains new material.
 
+**Path convention:** in this skill, every `data/...` and `resumes/...` path is
+relative to `WORKSPACE_ROOT` (set in `.sync-config.yaml` as `workspace_path`),
+not the repository root.
+
 ## Hard rules
 
 - **Never fabricate.** Write only what you can read in the source files.

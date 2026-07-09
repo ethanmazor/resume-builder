@@ -24,7 +24,7 @@ argument-hint: "<free-form instruction, e.g. 'mark Acme SWE as Interviewing'>"
 
 The owner asks you to add, update, or look up job applications. You write
 Python code directly using the `sqlite3` standard library to read/write
-`tracker-web/data/tracker.db` — no separate CLI, no running server needed.
+`${WORKSPACE_ROOT}/tracker/data/tracker.db` — no separate CLI, no running server needed.
 
 If the web app is running at `http://127.0.0.1:5050`, the kanban board will
 pick up your DB changes automatically on its 5-second poll.
@@ -34,10 +34,10 @@ pick up your DB changes automatically on its 5-second poll.
 ## Database location
 
 ```
-{repo_root}/tracker-web/data/tracker.db
+{workspace_root}/tracker/data/tracker.db
 ```
 
-Resolve `{repo_root}` as the directory containing `AGENTS.md`.
+Resolve `{workspace_root}` from `.sync-config.yaml` (`workspace_path`).
 
 ---
 
@@ -84,7 +84,7 @@ import sqlite3, sys
 from datetime import datetime, timezone
 from pathlib import Path
 
-DB = Path("/absolute/path/to/tracker-web/data/tracker.db")
+DB = Path("/absolute/path/to/resume-builder-workspace/tracker/data/tracker.db")
 now = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
 conn = sqlite3.connect(DB)
