@@ -48,7 +48,7 @@ its natural-language triggers.
 | `${WORKSPACE_ROOT}/data/projects/` | Raw code, schematics, and resources. The agent reads `${WORKSPACE_ROOT}/data/context/` summaries, not these directly. |
 | `template/` | Jake's Resume base + `STYLE_GUIDE.md`. You author `resume.tex` per this. |
 | `${WORKSPACE_ROOT}/data/jobs/` | Input job descriptions: `${WORKSPACE_ROOT}/data/jobs/{company-role}.md` (raw JD text + optional `## Hints`). |
-| `${WORKSPACE_ROOT}/resumes/` | Output. One folder per job: `resume.pdf`, `resume.tex`, `tailoring-notes.md`. |
+| `${WORKSPACE_ROOT}/resumes/` | Output. One folder per job: `resume.pdf`, `resume.tex`. |
 | `scripts/build.sh` | Compile with Tectonic + verify one page with `pdfinfo`. |
 | `scripts/start-tracker.sh` | Start the local job-tracker web app (creates venv and installs deps if needed). |
 
@@ -70,8 +70,22 @@ on a resume must have a corresponding `id` in
   not present in `${WORKSPACE_ROOT}/data/facts/` or
   `${WORKSPACE_ROOT}/data/context/`. Do not exaggerate scope or seniority.
 
-Every placed bullet must cite its pool ID in `tailoring-notes.md`. If you cannot
-cover a JD need from the pool, note the gap — do not fabricate coverage.
+Every placed bullet must map to a real pool ID in `${WORKSPACE_ROOT}/data/facts/`.
+If you cannot cover a JD need from the pool, note the gap — do not fabricate coverage.
+
+## Bullet writing standard (STAR)
+
+Every resume bullet must follow the STAR structure:
+- **Situation/Task**: concise context or problem
+- **Action**: what the owner did
+- **Result**: measurable impact or concrete outcome
+
+Bullets must remain grounded in approved pool content, but when selecting or lightly
+condensing bullets, prefer versions that preserve clear STAR flow.
+
+If STAR-complete wording is unclear or key context/result details are missing, stop and
+ask the owner for clarification before finalizing the resume. Do not guess or invent
+missing details.
 
 ## Hard rules
 

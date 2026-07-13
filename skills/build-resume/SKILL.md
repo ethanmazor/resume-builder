@@ -46,8 +46,7 @@ Determine the target job(s) in this priority order:
    `data/jobs/acme-swe.md`"). Build only that one.
 2. **Refine mode** — the owner gave feedback on an existing resume
    (e.g. "for acme-swe, lead with the AWS project"). Regenerate that one resume,
-   applying the feedback. Read the existing `resumes/{slug}/tailoring-notes.md`
-   for continuity.
+   applying the feedback.
 3. **Auto-detect (default)** — for every `data/jobs/{slug}.md` that has **no**
    `resumes/{slug}/resume.pdf`, build it. The `{slug}` is the JD filename without
    `.md`. If everything is already built, say so and stop.
@@ -81,10 +80,8 @@ against `data/facts/skills.yaml`. For any required item **not** present:
 2. **Owner confirms one-time use** — include the skill in this resume's Technical
    Skills section only. Do **not** add it to `data/facts/skills.yaml` or
    `data/profile/`.
-3. **Owner confirms it should persist** — add it to `data/facts/skills.yaml`
-   (and note it in `tailoring-notes.md`), then include it in the resume.
-4. **Owner says they don't have it** — omit entirely; note the gap in
-   `tailoring-notes.md`.
+3. **Owner confirms it should persist** — add it to `data/facts/skills.yaml`, then include it in the resume.
+4. **Owner says they don't have it** — omit entirely and call out the gap in your final response.
 
 Never silently add skills to the source of truth, and never claim a skill the
 owner has not confirmed.
@@ -114,8 +111,7 @@ pre-approved bullets in `data/facts/`.
 
 - **Select, don't write.** Every bullet on the resume must come from the `bullets:`
   pool in `data/facts/experience.yaml` or `data/facts/projects.yaml`. Do not
-  compose new bullet text. If no pool bullet covers a JD need, note the gap in
-  `tailoring-notes.md` and continue — do not fabricate coverage.
+  compose new bullet text. If no pool bullet covers a JD need, note the gap in your final response and continue; do not fabricate coverage.
 - **Score by relevance.** For each experience/project, rank its pool bullets by
   how well they match the JD's keywords, domain, and role type. Use the `angle`
   and `skills` fields on each bullet as signals. Pick the top 2–4 per entry.
@@ -124,8 +120,16 @@ pre-approved bullets in `data/facts/`.
 - **Minor length adjustments are allowed.** A single pool bullet may be shortened
   (condensed to one line, a clause removed) if it would otherwise overflow the
   page — but the core claim and wording must remain faithful to the pool text.
-  Record the original bullet ID in tailoring-notes.md regardless.
 - **Skills section**: surface the JD-relevant subset of `data/facts/skills.yaml`.
+- **STAR format is required.** Every selected bullet must read with clear
+  Situation/Task, Action, and Result. When lightly condensing pool bullets, preserve
+  STAR structure and concrete outcomes.
+- **Ask when STAR details are missing.** If a selected bullet lacks enough context,
+  action detail, or result clarity, pause and ask the owner for the missing details
+  before finalizing. Never infer or fabricate missing outcomes.
+- **Abstract implementation detail.** Prefer bullets that emphasize capability and impact over
+  low-level implementation specifics (e.g., register addresses, bus wiring internals, or
+  signal routing minutiae) unless the owner explicitly asks for those details.
 
 ### Adding new bullets to the pool
 
@@ -198,39 +202,9 @@ If a fixed compile error occurs, read the Tectonic log, fix the LaTeX, recompile
 
 ---
 
-## 7. Write the tailoring notes
+## 7. Finish
 
-Write `resumes/{slug}/tailoring-notes.md`:
-
-```markdown
-# Tailoring notes — {Company} / {Role}
-
-**JD:** data/jobs/{slug}.md
-**Generated:** {date}
-**Emphasis:** short summary of the angle taken (what was surfaced, what was cut, why).
-
-## Keyword coverage
-- {jd keyword} → {how the resume addresses it, or "not claimed — owner lacks this"}
-
-## Bullet provenance
-| Section | Bullet (short) | Source |
-|---------|----------------|--------|
-| Experience — Acme | "Led migration to AWS…" | data/facts/experience.yaml#acme-b2 |
-| Projects — Foo | "Built X handling Y…" | data/context/foo.md |
-
-## Trims applied to fit one page
-- {what was cut and why}
-```
-
-Every placed bullet must appear in the provenance table with a real source. If a
-JD keyword could not be truthfully claimed, note it — do not fabricate coverage.
-
----
-
-## 8. Finish
-
-- Confirm `resumes/{slug}/` contains `resume.pdf` (1 page), `resume.tex`,
-  `tailoring-notes.md`.
+- Confirm `resumes/{slug}/` contains `resume.pdf` (1 page) and `resume.tex`.
 - **Do NOT commit.** Leave everything uncommitted.
 - Report to the owner: which resume(s) you built, the emphasis taken, any trims,
   and any JD keywords you could not truthfully cover.

@@ -196,6 +196,17 @@ JD rather than leave space blank. Apply in this order:
 Never invent content to fill space — only add material that's already true and
 present in `facts/`/`context/` but was cut for relevance/brevity.
 
+## STAR bullet standard
+
+All bullets should follow STAR in one line when possible:
+- **Situation/Task**: what needed to be solved
+- **Action**: what the candidate implemented
+- **Result**: concrete impact (metric, reliability gain, time saved, risk reduced)
+
+When trimming for one page, keep STAR intact. Trim filler first, not the result.
+If a bullet cannot be made STAR-complete from available facts/context, ask the owner
+for missing detail instead of guessing.
+
 ## ATS + formatting conventions
 - Single column only. No tables for layout beyond the provided `\resumeSubheading`
   patterns. No images, no text boxes, no multi-column.
