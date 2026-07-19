@@ -149,6 +149,12 @@ Everything else: datasheets, images, datasets, configuration files.
 
 ### 5a — From the resume document (Category A)
 
+If one or more Category A resumes are present, list their paths, formats, and
+apparent recency. Ask the owner to choose exactly one as the home-base resume.
+If the owner provides no choice, do not guess. Preserve the selected source in
+`data/base-resume/` and record its original path and format in
+`data/base-resume/README.md`.
+
 Parse the resume text to extract:
 
 **Identity** (for `data/profile/profile.yaml`):
@@ -184,7 +190,25 @@ entry.
 
 ---
 
-## Step 6 — Write outputs
+## Step 6 — Establish the base resume
+
+After extracting the factual sources:
+
+1. If the owner selected an existing LaTeX resume, copy its source and required
+   local assets into `data/base-resume/`, then compile it as
+   `resumes/base/resume.tex`.
+2. If the selected resume is a PDF or document format, preserve the original in
+   `data/base-resume/`, then author `resumes/base/resume.tex` that faithfully
+   reproduces its approved content using the repository style guide.
+3. If no resume was supplied, author `resumes/base/resume.tex` from the
+   extracted factual pool and record `Created from source-of-truth facts` in
+   `data/base-resume/README.md`.
+4. Compile with `scripts/build.sh resumes/base/resume.tex` and require one page.
+
+The base resume is the only source used for JD-derived resumes. Never create a
+separate role-specific base during bootstrap.
+
+## Step 7 — Write outputs
 
 Write the following files. Never truncate existing content; merge if a file
 already has data.
@@ -396,6 +420,8 @@ Populated:
   data/facts/skills.yaml             ✓
   data/context/                      ✓  (N files)
   data/projects/                     ✓  (N directories)
+  data/base-resume/                  ✓  (selected source + provenance)
+  resumes/base/resume.pdf            ✓  (1 page)
 
 Gaps (see data/facts/ or data/context/ for TODOs):
   - Missing phone number
@@ -403,6 +429,7 @@ Gaps (see data/facts/ or data/context/ for TODOs):
 
 Next steps:
   1. Review the populated files and fill in any gaps.
-  2. Drop a job description in data/jobs/ and ask: "Build a resume for [role]."
+  2. Ask: "Refine my base resume" or add a job description and ask: "Build a
+     resume for [job-slug]."
   3. When you add new material to your data folder, ask: "sync my data."
 ```

@@ -1,8 +1,9 @@
 # AGENTS.md — Resume Builder
 
-This repository is a **tailored-resume factory**. A coding agent (you) reads a
-single source of truth about the owner's real experience and generates one-page,
-ATS-friendly LaTeX resumes tailored to specific job descriptions.
+This repository maintains one **base resume** as the owner's home base and
+creates one-page, job-specific derived resumes when the owner supplies job
+descriptions. The base resume is the primary wording and factual reference;
+derived resumes may make only minor, grounded keyword-alignment changes.
 
 **Read this file first, then follow the relevant skill below.**
 
@@ -29,12 +30,12 @@ its natural-language triggers.
 | Skill | Slash command | Trigger | What it does |
 |-------|---------------|---------|-------------|
 | `first-time-setup` | `/first-time-setup` | *"get me set up"*, *"how do I get started"* | Guided walkthrough for a brand-new clone: checks the toolchain, runs `bootstrap` if empty, explains the day-to-day workflow. |
-| `bootstrap` | `/bootstrap` | *"My data is at /path — bootstrap my source of truth"* | First-time setup: ingests an external data folder and populates `${WORKSPACE_ROOT}/data/profile/`, `${WORKSPACE_ROOT}/data/facts/`, `${WORKSPACE_ROOT}/data/context/`, and `${WORKSPACE_ROOT}/data/projects/`. Writes `.sync-config.yaml`. |
+| `bootstrap` | `/bootstrap` | *"My data is at /path — bootstrap my source of truth"* | Ingests the owner data, inventories existing resumes, and establishes or prepares a base resume. |
 | `sync` | `/sync` | *"sync my data"* | Incrementally merges new content from the data folder into the source of truth. Skips anything already present. |
 | `fetch-job` | `/fetch-job` | *"fetch this job: https://..."* | Fetches one or more job-posting URLs, parses JD metadata/keywords, and writes `${WORKSPACE_ROOT}/data/jobs/{company-role}.md`. |
 | `start-tracker` | `/start-tracker` | *"start tracker"* | Launches the local job-tracker web app on `http://127.0.0.1:5050`. |
 | `tracker-cli` | `/tracker-cli` | *"add Acme SWE to tracker"*, *"mark Acme as Rejected"*, *"list my applications"* | Agent writes Python sqlite3 code directly to update the tracker DB. Kanban board auto-picks up changes via polling. |
-| `build-resume` | `/build-resume` | Drop a JD in `${WORKSPACE_ROOT}/data/jobs/`, ask agent to build | Generates a tailored one-page PDF resume |
+| `build-resume` | `/build-resume` | *"refine my base resume"*, *"build for Acme"* | Refines the base resume or derives a lightly tailored JD-specific PDF |
 
 **If `${WORKSPACE_ROOT}/data/profile/profile.yaml` does not exist yet, run `first-time-setup` (or `bootstrap` directly) before anything else.**
 
@@ -43,26 +44,27 @@ its natural-language triggers.
 | Path | Purpose |
 |------|---------|
 | `${WORKSPACE_ROOT}/data/profile/` | Static identity: name, contact, links, education. Never tailored. |
-| `${WORKSPACE_ROOT}/data/facts/` | **Structured factual guardrail.** Experiences, projects, research, skills, courses. The boundary of what is true. |
+| `${WORKSPACE_ROOT}/data/facts/` | **Structured factual guardrail and bullet pool.** The boundary of what is true. |
 | `${WORKSPACE_ROOT}/data/context/` | Free-form "brag docs" / write-ups. Richer material to draw wording from. |
 | `${WORKSPACE_ROOT}/data/projects/` | Raw code, schematics, and resources. The agent reads `${WORKSPACE_ROOT}/data/context/` summaries, not these directly. |
 | `template/` | Jake's Resume base + `STYLE_GUIDE.md`. You author `resume.tex` per this. |
-| `${WORKSPACE_ROOT}/data/jobs/` | Input job descriptions: `${WORKSPACE_ROOT}/data/jobs/{company-role}.md` (raw JD text + optional `## Hints`). |
-| `${WORKSPACE_ROOT}/resumes/` | Output. One folder per job: `resume.pdf`, `resume.tex`. |
+| `${WORKSPACE_ROOT}/data/base-resume/` | The owner's selected or newly created home-base resume source and notes. |
+| `${WORKSPACE_ROOT}/data/jobs/` | Input job descriptions, one file per role. |
+| `${WORKSPACE_ROOT}/resumes/base/` | Compiled base resume. |
+| `${WORKSPACE_ROOT}/resumes/{job-slug}/` | Derived PDF, TeX, and tailoring notes for one job description. |
 | `scripts/build.sh` | Compile with Tectonic + verify one page with `pdfinfo`. |
 | `scripts/start-tracker.sh` | Start the local job-tracker web app (creates venv and installs deps if needed). |
 
 ## The grounding contract (non-negotiable)
 
-Resumes are built by **selecting** bullets from the pre-approved pool in
+The base and derived resumes are built from the pre-approved pool in
 `${WORKSPACE_ROOT}/data/facts/` — not by synthesizing new wording. Every bullet
 on a resume must have a corresponding `id` in
 `${WORKSPACE_ROOT}/data/facts/experience.yaml` or
 `${WORKSPACE_ROOT}/data/facts/projects.yaml`.
 
 - ✅ Allowed: selecting pool bullets; reordering them; lightly condensing a
-  bullet's length for line-fit; combining two pool bullets into one line if
-  both IDs are cited in `tailoring-notes.md`.
+  bullet for line fit.
 - ✅ Allowed: proposing a new pool bullet to the owner (they approve, you add
   it to `${WORKSPACE_ROOT}/data/facts/`, then it can be used).
 - ❌ Forbidden: writing new bullet text not in the pool; inventing employers,
@@ -71,7 +73,10 @@ on a resume must have a corresponding `id` in
   `${WORKSPACE_ROOT}/data/context/`. Do not exaggerate scope or seniority.
 
 Every placed bullet must map to a real pool ID in `${WORKSPACE_ROOT}/data/facts/`.
-If you cannot cover a JD need from the pool, note the gap — do not fabricate coverage.
+Derived resumes must preserve the base resume's structure and claims. A JD may
+prompt minor changes such as reordering existing content, surfacing a supported
+skill/tool, or making faithful keyword substitutions. The JD alone never proves
+experience and never authorizes a new bullet or claim.
 
 ## Bullet writing standard (STAR)
 

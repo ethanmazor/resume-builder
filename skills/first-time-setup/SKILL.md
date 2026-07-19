@@ -20,7 +20,7 @@ argument-hint: "[optional: path to your existing data folder]"
 ## Purpose
 
 A single entry point for someone who just cloned this repo. It walks the owner
-through everything needed before they can build a tailored resume, delegating
+through everything needed before they can establish and refine a base resume, delegating
 to the other skills rather than duplicating their logic.
 
 Run this top-to-bottom, stopping to ask the owner questions where noted. Don't
@@ -64,8 +64,10 @@ non-empty entries.
 
 ### Case A — Already populated
 
-Report what's already there (name, # of experience entries, # of projects) and
-skip to Step 4.
+Report what's already there (name, # of experience entries, # of projects).
+Also check for `data/base-resume/` and `resumes/base/resume.tex`. If absent,
+ask the owner to select an existing resume from their source folder as the base,
+or confirm that the agent should create one from the facts.
 
 ### Case B — Empty
 
@@ -99,10 +101,10 @@ This is what lets the owner later say "sync my data" to pull in new material.
 
 Tell the owner, briefly, what happens next:
 
-1. **Add a job description** — drop a JD in `data/jobs/{company-role}.md`, or
-   ask to fetch one directly: *"fetch this job: https://..."* (`fetch-job` skill).
-2. **Build a tailored resume** — *"build a resume for {company-role}"*
-   (`build-resume` skill). Output lands in `resumes/{slug}/`.
+1. **Create or refine the base resume** — *"refine my base resume"* or
+   *"build my base resume"*. Output lands in `resumes/base/`.
+2. **Build for a job** — add or fetch a JD, then say *"build a resume for
+   {job-slug}"*. Output lands in `resumes/{job-slug}/` and preserves the base.
 3. **Track applications** (optional) — *"add {company} {role} to tracker"*
    (`tracker-cli` skill), or *"start tracker"* to open the kanban board
    (`start-tracker` skill) at `http://127.0.0.1:5050`.
@@ -116,11 +118,10 @@ Tell the owner, briefly, what happens next:
 
 Ask the owner:
 
-> "Want me to fetch a job posting now, or do you already have one in
-> `data/jobs/`?"
+> "Want me to establish or refine your base resume now?"
 
-If they have one ready, offer to run `build-resume` immediately. If not, stop
-here — setup is complete and they can come back anytime.
+If they want to proceed, run `build-resume` in base-resume mode. Otherwise, stop
+here - setup is complete and they can come back anytime.
 
 ---
 

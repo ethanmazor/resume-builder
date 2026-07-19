@@ -3,7 +3,7 @@ name: fetch-job
 description: >
   Fetch one or more job-posting URLs, extract the job description and core
   metadata, parse must-have and nice-to-have keywords, and write normalized
-  files to data/jobs/ for downstream resume generation.
+  files to data/jobs/ for application research and tracking.
 triggers:
   - "fetch this job:"
   - "fetch these jobs:"
@@ -161,7 +161,8 @@ Failed URLs:
   - https://...
 
 Next step:
-  Ask: "Build resumes for any new jobs."
+  Ask: "Build a resume for {slug}." The result is a lightly tailored copy of
+  the owner's base resume, not a new factual source.
 ```
 
 If all URLs fail, do not create files; ask the owner to paste JD text manually.
