@@ -103,8 +103,9 @@ Tell the owner, briefly, what happens next:
 
 1. **Create or refine the base resume** — *"refine my base resume"* or
    *"build my base resume"*. Output lands in `resumes/base/`.
-2. **Build for a job** — add or fetch a JD, then say *"build a resume for
-   {job-slug}"*. Output lands in `resumes/{job-slug}/` and preserves the base.
+2. **Build with a job in mind** — add or fetch a JD, then say *"build a resume
+   for {job-slug}"*. The tool applies grounded keyword alignment to
+   `resumes/base/` (single-output model).
 3. **Track applications** (optional) — *"add {company} {role} to tracker"*
    (`tracker-cli` skill), or *"start tracker"* to open the kanban board
    (`start-tracker` skill) at `http://127.0.0.1:5050`.

@@ -161,8 +161,8 @@ Failed URLs:
   - https://...
 
 Next step:
-  Ask: "Build a resume for {slug}." The result is a lightly tailored copy of
-  the owner's base resume, not a new factual source.
+  Ask: "Build a resume for {slug}." The result updates `resumes/base/` using
+  grounded, minor JD keyword alignment.
 ```
 
 If all URLs fail, do not create files; ask the owner to paste JD text manually.

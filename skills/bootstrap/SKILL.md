@@ -205,8 +205,8 @@ After extracting the factual sources:
    `data/base-resume/README.md`.
 4. Compile with `scripts/build.sh resumes/base/resume.tex` and require one page.
 
-The base resume is the only source used for JD-derived resumes. Never create a
-separate role-specific base during bootstrap.
+The base resume is the only resume output path. JD-guided runs may refine the
+base wording, but bootstrap must never create role-specific resume directories.
 
 ## Step 7 — Write outputs
 
@@ -430,6 +430,6 @@ Gaps (see data/facts/ or data/context/ for TODOs):
 Next steps:
   1. Review the populated files and fill in any gaps.
   2. Ask: "Refine my base resume" or add a job description and ask: "Build a
-     resume for [job-slug]."
+     resume for [job-slug]" to apply grounded keyword alignment to the base.
   3. When you add new material to your data folder, ask: "sync my data."
 ```

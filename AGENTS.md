@@ -1,9 +1,8 @@
 # AGENTS.md — Resume Builder
 
-This repository maintains one **base resume** as the owner's home base and
-creates one-page, job-specific derived resumes when the owner supplies job
-descriptions. The base resume is the primary wording and factual reference;
-derived resumes may make only minor, grounded keyword-alignment changes.
+This repository maintains one **base resume** as the owner's home base.
+Job descriptions can guide minor, grounded keyword-alignment refinements, but
+the tool outputs only one resume in the base location.
 
 **Read this file first, then follow the relevant skill below.**
 
@@ -35,7 +34,7 @@ its natural-language triggers.
 | `fetch-job` | `/fetch-job` | *"fetch this job: https://..."* | Fetches one or more job-posting URLs, parses JD metadata/keywords, and writes `${WORKSPACE_ROOT}/data/jobs/{company-role}.md`. |
 | `start-tracker` | `/start-tracker` | *"start tracker"* | Launches the local job-tracker web app on `http://127.0.0.1:5050`. |
 | `tracker-cli` | `/tracker-cli` | *"add Acme SWE to tracker"*, *"mark Acme as Rejected"*, *"list my applications"* | Agent writes Python sqlite3 code directly to update the tracker DB. Kanban board auto-picks up changes via polling. |
-| `build-resume` | `/build-resume` | *"refine my base resume"*, *"build for Acme"* | Refines the base resume or derives a lightly tailored JD-specific PDF |
+| `build-resume` | `/build-resume` | *"refine my base resume"*, *"build for Acme"* | Refines the single base resume, optionally using a JD for grounded keyword alignment |
 
 **If `${WORKSPACE_ROOT}/data/profile/profile.yaml` does not exist yet, run `first-time-setup` (or `bootstrap` directly) before anything else.**
 
@@ -50,14 +49,13 @@ its natural-language triggers.
 | `template/` | Jake's Resume base + `STYLE_GUIDE.md`. You author `resume.tex` per this. |
 | `${WORKSPACE_ROOT}/data/base-resume/` | The owner's selected or newly created home-base resume source and notes. |
 | `${WORKSPACE_ROOT}/data/jobs/` | Input job descriptions, one file per role. |
-| `${WORKSPACE_ROOT}/resumes/base/` | Compiled base resume. |
-| `${WORKSPACE_ROOT}/resumes/{job-slug}/` | Derived PDF, TeX, and tailoring notes for one job description. |
+| `${WORKSPACE_ROOT}/resumes/base/` | The single compiled resume output directory (`resume.tex`, `resume.pdf`, build logs). |
 | `scripts/build.sh` | Compile with Tectonic + verify one page with `pdfinfo`. |
 | `scripts/start-tracker.sh` | Start the local job-tracker web app (creates venv and installs deps if needed). |
 
 ## The grounding contract (non-negotiable)
 
-The base and derived resumes are built from the pre-approved pool in
+The base resume and any JD-guided refinements are built from the pre-approved pool in
 `${WORKSPACE_ROOT}/data/facts/` — not by synthesizing new wording. Every bullet
 on a resume must have a corresponding `id` in
 `${WORKSPACE_ROOT}/data/facts/experience.yaml` or
@@ -73,7 +71,7 @@ on a resume must have a corresponding `id` in
   `${WORKSPACE_ROOT}/data/context/`. Do not exaggerate scope or seniority.
 
 Every placed bullet must map to a real pool ID in `${WORKSPACE_ROOT}/data/facts/`.
-Derived resumes must preserve the base resume's structure and claims. A JD may
+JD-guided refinements must preserve the base resume's structure and claims. A JD may
 prompt minor changes such as reordering existing content, surfacing a supported
 skill/tool, or making faithful keyword substitutions. The JD alone never proves
 experience and never authorizes a new bullet or claim.
